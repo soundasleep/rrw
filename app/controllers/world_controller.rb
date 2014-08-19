@@ -1,5 +1,16 @@
 class WorldController < ApplicationController
   def index
+    # respawn any NPCs that have to be respawned (just once per request)
+    npcs = Npc.where(:space_id => current_player.space_id)
+
+    # respawn any that need to respawn
+    npcs.select { |p| p.current_health <= 0 and p.died_at <= p.respawns.seconds.ago }.each do |p|
+      p.current_health = p.total_health
+      p.attacking_id = nil
+      p.save()
+      add_combat_log "#{p.name} has respawned"
+    end
+
   end
 
   def travel
@@ -62,7 +73,10 @@ class WorldController < ApplicationController
     p2.save()
     add_combat_log "#{p1.name} attacked #{p2.name} causing #{damage} damage"
     if p2.current_health <= 0
+      p2.died_at = Time.now
+      p2.save()
       add_combat_log "#{p2.name} has died"
     end
   end
 end
+

@@ -14,6 +14,6 @@ Connection.create(:name => "to the inn", :from_id => spaces[:home].id, :to_id =>
 Connection.create(:name => "back home", :from_id => spaces[:inn].id, :to_id => spaces[:home].id)
 
 npcs = {
-  :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 20, :total_health => 20, :level => 99, :space_id => spaces[:inn].id),
-  :innkeeper_mouse => Npc.create(:name => "Mouse", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :space_id => spaces[:inn].id),
+  :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 20, :total_health => 20, :level => 99, :respawns => 60, :space_id => spaces[:inn].id),
+  :innkeeper_mouse => Npc.create(:name => "Mouse", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id),
 }

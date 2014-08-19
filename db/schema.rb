@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819033428) do
+ActiveRecord::Schema.define(version: 20140819035358) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 20140819033428) do
     t.datetime "updated_at"
     t.integer  "space_id"
     t.integer  "attacking_id"
+    t.integer  "respawns"
+    t.datetime "died_at"
   end
 
   add_index "npcs", ["attacking_id"], name: "index_npcs_on_attacking_id"

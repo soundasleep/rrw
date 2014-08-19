@@ -20,7 +20,7 @@
             %strong You!
           - else
             = p.name
-          (level #{p.level})
+          (level #{p.level}, #{p.current_health}/#{p.total_health} health)
 
   - if nearby_npcs.length > 0
     %p There are #{nearby_npcs.length} NPCs here:
@@ -28,7 +28,7 @@
       - nearby_npcs.each do |p|
         %li
           = p.name
-          (level #{p.level})
+          (level #{p.level}, #{p.current_health}/#{p.total_health} health)
           - if p.friendly
             (friendly)
           - else
