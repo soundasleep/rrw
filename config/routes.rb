@@ -17,6 +17,7 @@ Rrw::Application.routes.draw do
   # resources :player
   get "player/index"
   get "player" => "player#index"
+  get "player/reset"
 
   # Example resource route with options:
   #   resources :products do

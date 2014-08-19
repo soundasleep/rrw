@@ -1,6 +1,8 @@
 %h1 Player#index
 %p Find me in app/views/player/index.html.erb
 
+= link_to "Restart game", controller: 'player', action: 'reset'
+
 %dl{:class => "character-sheet"}
   %dt Name
   %dd= current_player.name
