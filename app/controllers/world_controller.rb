@@ -11,6 +11,9 @@ class WorldController < ApplicationController
       add_combat_log "#{p.name} has respawned"
     end
 
+    # resave the current player
+    current_player.updated_at = Time.now
+    current_player.save()
   end
 
   def travel
