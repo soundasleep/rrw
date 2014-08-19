@@ -11,10 +11,14 @@ spaces = {
   :forest => Space.create(:name => "Dark forest", :description => "A dark and scary forest, filled with critters")
 }
 
-Connection.create(:name => "to the inn", :from_id => spaces[:home].id, :to_id => spaces[:inn].id)
-Connection.create(:name => "back home", :from_id => spaces[:inn].id, :to_id => spaces[:home].id)
-Connection.create(:name => "into the forest", :from_id => spaces[:home].id, :to_id => spaces[:forest].id)
-Connection.create(:name => "back home", :from_id => spaces[:forest].id, :to_id => spaces[:home].id)
+# create a bidirectional connection
+def connect(spaces, from, to, to_label, from_label)
+  Connection.create(:name => to_label, :from_id => spaces[from].id, :to_id => spaces[to].id)
+  Connection.create(:name => from_label, :from_id => spaces[to].id, :to_id => spaces[from].id)
+end
+
+connect(spaces, :home, :inn, "to the inn", "back home")
+connect(spaces, :home, :forest, "into the forest", "back home")
 
 npcs = {
   :inn => {
