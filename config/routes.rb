@@ -20,6 +20,7 @@ Rrw::Application.routes.draw do
   get "player/index"
   get "player" => "player#index"
   get "player/reset"
+  get "player/death"
 
   # Example resource route with options:
   #   resources :products do

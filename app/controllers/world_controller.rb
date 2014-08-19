@@ -1,5 +1,16 @@
 class WorldController < ApplicationController
+  def player_is_valid?
+    # is the current player dead?
+    if current_player.current_health <= 0
+      redirect_to "/player/death"
+      return false
+    end
+    return true
+  end
+
   def index
+    return unless player_is_valid?
+
     # respawn any NPCs that have to be respawned (just once per request)
     npcs = Npc.where(:space_id => current_player.space_id)
 
@@ -17,6 +28,8 @@ class WorldController < ApplicationController
   end
 
   def travel
+    return unless player_is_valid?
+
     if current_player and current_player.space and params[:connection]
       space = current_player.space
       c = Connection.where(:from_id => space.id, :id => params[:connection])
@@ -34,14 +47,16 @@ class WorldController < ApplicationController
   end
 
   def attack
+    return unless player_is_valid?
+
     if current_player and params[:npc]
       npcs = Npc.where(:id => params[:npc])
       if npcs.length == 1
         npc = npcs.first
         do_attack(current_player, npc)
         if npc.current_health > 0
-          do_attack(npc, current_player)
           npc.attacking_id = current_player.id
+          do_attack(npc, current_player)
           npc.save()
         end
         return redirect_to "/world/index"
@@ -57,7 +72,7 @@ class WorldController < ApplicationController
   helper_method :nearby_enemies
 
   def nearby_players
-    Player.all(:conditions => ["space_id = ? and updated_at >= ?", current_player.space_id, 10.minutes.ago])
+    Player.all(:conditions => ["space_id = ? and updated_at >= ? and current_health > 0", current_player.space_id, 10.minutes.ago])
   end
 
   def nearby_npcs
@@ -81,6 +96,17 @@ class WorldController < ApplicationController
       p2.save()
       add_combat_log "#{p2.name} has died"
 
+      # track who killed this player
+      if p2.track_killed_by?
+        p2.killed_by_id = p1.id
+        p2.save()
+
+        # stop the NPC attacking the player
+        # TODO have a parent class for (players, NPCs) rather than this fragile logic
+        p1.attacking_id = nil
+        p1.save()
+      end
+
       # do post-combat mechanics: XP, loot
       if p1.can_xp?
         xp = p2.get_xp
@@ -92,8 +118,7 @@ class WorldController < ApplicationController
         p1.save()
 
         # upgrade levels?
-        next_level_xp = 20.0 ** (1 + 0.2 * (p1.level - 1)) - 10
-        if p1.xp >= next_level_xp
+        if p1.xp >= p1.next_level_xp
           p1.level += 1
           add_combat_log "#{p1.name} has achieved level #{p1.level}"
           p1.current_health += 2
@@ -101,7 +126,7 @@ class WorldController < ApplicationController
           add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
           p1.save()
         else
-          add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{next_level_xp} for the next level"
+          add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
         end
       end
 

@@ -18,6 +18,11 @@ class Character < ActiveRecord::Base
     false
   end
 
+  # Do we keep track of what NPC killed this character?
+  def track_killed_by?
+    false
+  end
+
   # Get the amount of damage that this character can deal, as a string.
   def get_damage
     1 + Random.rand(3)
