@@ -1,5 +1,14 @@
 class WorldController < ApplicationController
+  # Check that the current player is valid;
+  # {@code redirect_to} if the current player is not valid and
+  # needs to be created or respawned.
   def player_is_valid?
+    # do we have a current player?
+    if not current_player
+      redirect_to "/player/new"
+      return false
+    end
+
     # is the current player dead?
     if current_player.current_health <= 0
       redirect_to "/player/death"
@@ -67,6 +76,8 @@ class WorldController < ApplicationController
     redirect_to "/world/index"
   end
 
+  # helper methods
+
   helper_method :nearby_players
   helper_method :nearby_npcs
   helper_method :nearby_enemies
@@ -83,62 +94,63 @@ class WorldController < ApplicationController
     nearby_npcs.select { |p| not p.friendly? }
   end
 
+  # private methods
   private
 
-  def do_attack(p1, p2)
-    damage = p1.get_damage
-    damage_string = p1.get_damage_string
-    p2.current_health -= damage
-    p2.save()
-    add_combat_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
-    if p2.current_health <= 0
-      p2.died_at = Time.now
+    def do_attack(p1, p2)
+      damage = p1.get_damage
+      damage_string = p1.get_damage_string
+      p2.current_health -= damage
       p2.save()
-      add_combat_log "#{p2.name} has died"
-
-      # track who killed this player
-      if p2.track_killed_by?
-        p2.killed_by_id = p1.id
+      add_combat_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
+      if p2.current_health <= 0
+        p2.died_at = Time.now
         p2.save()
+        add_combat_log "#{p2.name} has died"
 
-        # stop the NPC attacking the player
-        # TODO have a parent class for (players, NPCs) rather than this fragile logic
-        p1.attacking_id = nil
-        p1.save()
-      end
+        # track who killed this player
+        if p2.track_killed_by?
+          p2.killed_by_id = p1.id
+          p2.save()
 
-      # do post-combat mechanics: XP, loot
-      if p1.can_xp?
-        xp = p2.get_xp
-        add_combat_log "#{p1.name} gains #{xp} XP"
-        if p1.xp == nil
-          p1.xp = 0
-        end
-        p1.xp += xp
-        p1.save()
-
-        # upgrade levels?
-        if p1.xp >= p1.next_level_xp
-          p1.level += 1
-          add_combat_log "#{p1.name} has achieved level #{p1.level}"
-          p1.current_health += 2
-          p1.total_health += 2
-          add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
+          # stop the NPC attacking the player
+          # TODO have a parent class for (players, NPCs) rather than this fragile logic
+          p1.attacking_id = nil
           p1.save()
-        else
-          add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
         end
-      end
 
-      if p1.can_loot?
-        loot = p2.get_loot
-        add_combat_log "#{p1.name} receives #{loot[:gold]} gold"
-        # TODO other loot types
-        # maybe create a new Loot class?
-        p1.gold += loot[:gold]
-        p1.save()
+        # do post-combat mechanics: XP, loot
+        if p1.can_xp?
+          xp = p2.get_xp
+          add_combat_log "#{p1.name} gains #{xp} XP"
+          if p1.xp == nil
+            p1.xp = 0
+          end
+          p1.xp += xp
+          p1.save()
+
+          # upgrade levels?
+          if p1.xp >= p1.next_level_xp
+            p1.level += 1
+            add_combat_log "#{p1.name} has achieved level #{p1.level}"
+            p1.current_health += 2
+            p1.total_health += 2
+            add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
+            p1.save()
+          else
+            add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
+          end
+        end
+
+        if p1.can_loot?
+          loot = p2.get_loot
+          add_combat_log "#{p1.name} receives #{loot[:gold]} gold"
+          # TODO other loot types
+          # maybe create a new Loot class?
+          p1.gold += loot[:gold]
+          p1.save()
+        end
       end
     end
-  end
 end
 

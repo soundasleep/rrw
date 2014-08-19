@@ -21,6 +21,8 @@ Rrw::Application.routes.draw do
   get "player" => "player#index"
   get "player/reset"
   get "player/death"
+  get "player/new"
+  post "player/create"
 
   # Example resource route with options:
   #   resources :products do
