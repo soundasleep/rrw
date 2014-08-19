@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
     "yay"
   end
 
+  helper_method :current_player
+
   # Load a player model
   private
 

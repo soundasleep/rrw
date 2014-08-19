@@ -2,14 +2,15 @@
 %html
   %head
     %title Rrw
-    =stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
-    =javascript_include_tag "application", "data-turbolinks-track" => true
-    =csrf_meta_tags
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
 
   %body
     / identical to %div { :class => navigation }
     .navigation
-      = render "navigation", :locals => { :player => @current_player }
+      = current_player
+      = render "navigation"
 
     .content
       = yield

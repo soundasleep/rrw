@@ -3,19 +3,19 @@
 
 %dl{:class => "character-sheet"}
   %dt Name
-  %dd= @player.name
+  %dd= current_player.name
 
   %dt Level
-  %dd= @player.level
+  %dd= current_player.level
 
   %dt Health
   %dd 
-    = @player.current_health
+    = current_player.current_health
     \/
-    = @player.total_health
+    = current_player.total_health
 
   %dt Mana
   %dd 
-    = @player.current_mana
+    = current_player.current_mana
     \/
-    = @player.total_mana
+    = current_player.total_mana

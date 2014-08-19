@@ -3,6 +3,6 @@
     = link_to 'World', controller: 'world'
 
   %li.stats
-    = link_to @player.name, controller: 'player'
-    (level #{@player.level})
-    #{@player.current_health}/#{@player.total_health} health
+    = link_to current_player.name, controller: 'player'
+    (level #{current_player.level})
+    #{current_player.current_health}/#{current_player.total_health} health
