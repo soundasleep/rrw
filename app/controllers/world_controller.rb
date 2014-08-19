@@ -19,4 +19,10 @@ class WorldController < ApplicationController
     addError "Could not find that connection"
     redirect_to "/world/index"
   end
+
+  helper_method :nearby_players
+
+  def nearby_players
+    Player.all(:conditions => ["space_id = ? and updated_at >= ?", current_player.space_id, 10.minutes.ago])
+  end
 end

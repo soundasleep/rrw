@@ -11,11 +11,25 @@
     %i
       = current_player.space.description
 
+  %p
+    There are #{nearby_players.length} people here:
+    %ul
+      - nearby_players.each do |p|
+        %li
+          - if p.id == current_player.id
+            %strong You!
+          - else
+            = p.name
+          (level #{p.level})
+
   %h2 Travel
   - current_player.space.connections.each do |c|
     = form_tag("/world/travel", method: "post") do
       = hidden_field_tag(:connection, c.id)
       = submit_tag("Go #{c.name}")
+
+  = form_tag("/world/index", method: "get") do
+    = submit_tag("Look around again")
 
 - else
   %h1 You are lost
