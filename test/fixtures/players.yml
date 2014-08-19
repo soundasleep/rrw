@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  level: 1
+  total_health: 1
+  current_health: 1
+  total_mana: 1
+  current_mana: 1
+  strength: 1
+  intelligence: 1
+  wisdom: 1
+  dexterity: 1
+  charisma: 1
+  luck: 1
+  gold: 1
+
+two:
+  name: MyString
+  description: MyText
+  level: 1
+  total_health: 1
+  current_health: 1
+  total_mana: 1
+  current_mana: 1
+  strength: 1
+  intelligence: 1
+  wisdom: 1
+  dexterity: 1
+  charisma: 1
+  luck: 1
+  gold: 1
