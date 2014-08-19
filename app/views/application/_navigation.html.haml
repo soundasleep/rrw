@@ -1,6 +1,8 @@
 %ul
   %li.home
-    = link_to 'Home', controller: 'world'
+    = link_to 'World', controller: 'world'
 
-  %li.player
-    = link_to 'Player', controller: 'player'
+  %li.stats
+    = link_to @player.name, controller: 'player'
+    (level #{@player.level})
+    #{@player.current_health}/#{@player.total_health} health

@@ -9,7 +9,7 @@
   %body
     / identical to %div { :class => navigation }
     .navigation
-      = render "navigation"
+      = render "navigation", :locals => { :player => @current_player }
 
     .content
       = yield
