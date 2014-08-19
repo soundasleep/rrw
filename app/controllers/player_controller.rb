@@ -1,8 +1,5 @@
 class PlayerController < ApplicationController
   def index
-  end
-
-  def show
     @player = Player.new()
     @player.name = "Meow"
     @player.level = 1

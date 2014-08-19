@@ -7,4 +7,9 @@
     =csrf_meta_tags
 
   %body
-    = yield
+    / identical to %div { :class => navigation }
+    .navigation
+      = render "navigation"
+
+    .content
+      = yield
