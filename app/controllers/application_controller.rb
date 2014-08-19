@@ -3,11 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def whatever
-    "yay"
-  end
-
   helper_method :current_player
+  helper_method :errors
 
   # Load a player model
   private
@@ -39,5 +36,24 @@ class ApplicationController < ActionController::Base
       player.space_id = home_space.first.id
     end
     return player
+  end
+
+  def errors
+    if not @_errors
+      @_errors = session[:errors]
+      session[:errors] = []
+    end
+    @_errors
+  end
+
+  def addError(e)
+    if not session[:errors]
+      session[:errors] = []
+    end
+    if not @_errors
+      @_errors = []
+    end
+    session[:errors].push e
+    @_errors.push e
   end
 end

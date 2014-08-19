@@ -15,3 +15,9 @@
 
   %li.debug
     = current_player
+
+- if errors
+  %ul.errors
+    - errors.each do |e|
+      %li.error
+        = e

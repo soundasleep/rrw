@@ -11,6 +11,12 @@
     %i
       = current_player.space.description
 
+  %h2 Travel
+  - current_player.space.connections.each do |c|
+    = form_tag("/world/travel", method: "post") do
+      = hidden_field_tag(:connection, c.id)
+      = submit_tag("Go #{c.name}")
+
 - else
   %h1 You are lost
   %p
