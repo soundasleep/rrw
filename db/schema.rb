@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819032053) do
+ActiveRecord::Schema.define(version: 20140819033428) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -33,8 +33,10 @@ ActiveRecord::Schema.define(version: 20140819032053) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "space_id"
+    t.integer  "attacking_id"
   end
 
+  add_index "npcs", ["attacking_id"], name: "index_npcs_on_attacking_id"
   add_index "npcs", ["space_id"], name: "index_npcs_on_space_id"
 
   create_table "players", force: true do |t|

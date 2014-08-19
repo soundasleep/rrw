@@ -9,14 +9,32 @@ class WorldController < ApplicationController
       if c.length > 0
         current_player.space_id = c.first.to_id
         current_player.save()
-        redirect_to "/world/index"
-        return
+        return redirect_to "/world/index"
       end
     end
 
     # or, bail out
     # TODO display an error message
-    addError "Could not find that connection"
+    add_error "Could not find that connection"
+    redirect_to "/world/index"
+  end
+
+  def attack
+    if current_player and params[:npc]
+      npcs = Npc.where(:id => params[:npc])
+      if npcs.length == 1
+        npc = npcs.first
+        do_attack(current_player, npc)
+        if npc.current_health > 0
+          do_attack(npc, current_player)
+          npc.attacking_id = current_player.id
+          npc.save()
+        end
+        return redirect_to "/world/index"
+      end
+    end
+
+    add_error "Could not find that NPC"
     redirect_to "/world/index"
   end
 
@@ -34,5 +52,17 @@ class WorldController < ApplicationController
 
   def nearby_enemies
     nearby_npcs.select { |p| not p.friendly? }
+  end
+
+  private
+
+  def do_attack(p1, p2)
+    damage = 1
+    p2.current_health -= damage
+    p2.save()
+    add_combat_log "#{p1.name} attacked #{p2.name} causing #{damage} damage"
+    if p2.current_health <= 0
+      add_combat_log "#{p2.name} has died"
+    end
   end
 end

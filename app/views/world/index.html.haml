@@ -32,7 +32,13 @@
           - if p.friendly
             (friendly)
           - else
-            %strong enemy
+            %strong enemy!
+          - if p.attacking
+            attacking
+            - if p.attacking.id == current_player.id
+              %strong you!
+            - else
+              = p.attacking.name
 
   %h2 Travel
   - current_player.space.connections.each do |c|

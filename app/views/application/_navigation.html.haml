@@ -21,3 +21,9 @@
     - errors.each do |e|
       %li.error
         = e
+
+- if combat_log
+  %ul.combat_log
+    - combat_log.each do |e|
+      %li.log
+        = e
