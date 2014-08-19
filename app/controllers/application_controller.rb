@@ -12,16 +12,20 @@ class ApplicationController < ActionController::Base
   # Load a player model
   private
 
+  # Based on http://guides.rubyonrails.org/action_controller_overview.html.
+  #
+  # To be able to store objects rather than IDs in sessions, use the
+  # `active_record_store` rather than the `cookie_store`: 
+  # http://stackoverflow.com/questions/9473808/cookie-overflow-in-rails-application
   def current_player
-    # based on http://guides.rubyonrails.org/action_controller_overview.html
-    @_current_player ||= create_new_player()
+    session[:current_player] ||= create_new_player()
   end
 
   def create_new_player
     player = Player.new()
     player.name = "Meow"
     player.level = 1
-    player.current_health = 11
+    player.current_health = 12
     player.total_health = 20
     return player
   end

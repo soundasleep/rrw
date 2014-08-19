@@ -6,3 +6,6 @@
     = link_to current_player.name, controller: 'player'
     (level #{current_player.level})
     #{current_player.current_health}/#{current_player.total_health} health
+
+  %li.debug
+    = current_player

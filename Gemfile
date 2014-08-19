@@ -46,3 +46,6 @@ end
 
 # Use Haml
 gem 'haml'
+
+# Use active_record_store for storing session objects
+gem 'activerecord-session_store'
