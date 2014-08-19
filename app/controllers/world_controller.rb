@@ -80,6 +80,39 @@ class WorldController < ApplicationController
       p2.died_at = Time.now
       p2.save()
       add_combat_log "#{p2.name} has died"
+
+      # do post-combat mechanics: XP, loot
+      if p1.can_xp?
+        xp = p2.get_xp
+        add_combat_log "#{p1.name} gains #{xp} XP"
+        if p1.xp == nil
+          p1.xp = 0
+        end
+        p1.xp += xp
+        p1.save()
+
+        # upgrade levels?
+        next_level_xp = 20.0 ** (1 + 0.2 * (p1.level - 1)) - 10
+        if p1.xp >= next_level_xp
+          p1.level += 1
+          add_combat_log "#{p1.name} has achieved level #{p1.level}"
+          p1.current_health += 2
+          p1.total_health += 2
+          add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
+          p1.save()
+        else
+          add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{next_level_xp} for the next level"
+        end
+      end
+
+      if p1.can_loot?
+        loot = p2.get_loot
+        add_combat_log "#{p1.name} receives #{loot[:gold]} gold"
+        # TODO other loot types
+        # maybe create a new Loot class?
+        p1.gold += loot[:gold]
+        p1.save()
+      end
     end
   end
 end
