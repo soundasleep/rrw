@@ -21,8 +21,18 @@ class WorldController < ApplicationController
   end
 
   helper_method :nearby_players
+  helper_method :nearby_npcs
+  helper_method :nearby_enemies
 
   def nearby_players
     Player.all(:conditions => ["space_id = ? and updated_at >= ?", current_player.space_id, 10.minutes.ago])
+  end
+
+  def nearby_npcs
+    Npc.all(:conditions => ["space_id = ? and current_health > 0", current_player.space_id])
+  end
+
+  def nearby_enemies
+    nearby_npcs.select { |p| not p.friendly? }
   end
 end

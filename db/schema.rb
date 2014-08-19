@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819011728) do
+ActiveRecord::Schema.define(version: 20140819032053) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -23,6 +23,19 @@ ActiveRecord::Schema.define(version: 20140819011728) do
 
   add_index "connections", ["from_id"], name: "index_connections_on_from_id"
   add_index "connections", ["to_id"], name: "index_connections_on_to_id"
+
+  create_table "npcs", force: true do |t|
+    t.string   "name"
+    t.boolean  "friendly"
+    t.integer  "current_health"
+    t.integer  "total_health"
+    t.integer  "level"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "space_id"
+  end
+
+  add_index "npcs", ["space_id"], name: "index_npcs_on_space_id"
 
   create_table "players", force: true do |t|
     t.string   "name"

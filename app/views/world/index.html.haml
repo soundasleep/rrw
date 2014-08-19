@@ -7,7 +7,7 @@
     %strong
       = current_player.space.name
 
-  %p 
+  %p
     %i
       = current_player.space.description
 
@@ -22,6 +22,18 @@
             = p.name
           (level #{p.level})
 
+  - if nearby_npcs.length > 0
+    %p There are #{nearby_npcs.length} NPCs here:
+    %ul
+      - nearby_npcs.each do |p|
+        %li
+          = p.name
+          (level #{p.level})
+          - if p.friendly
+            (friendly)
+          - else
+            %strong enemy
+
   %h2 Travel
   - current_player.space.connections.each do |c|
     = form_tag("/world/travel", method: "post") do
@@ -30,6 +42,13 @@
 
   = form_tag("/world/index", method: "get") do
     = submit_tag("Look around again")
+
+  - if nearby_enemies.length > 0
+    %h2 Attack
+    - nearby_enemies.each do |p|
+      = form_tag("/world/attack", method: "post") do
+        = hidden_field_tag(:npc, p.id)
+        = submit_tag("Attack #{p.name}")
 
 - else
   %h1 You are lost
