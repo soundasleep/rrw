@@ -7,5 +7,11 @@
     (level #{current_player.level})
     #{current_player.current_health}/#{current_player.total_health} health
 
+  %li.space
+    - if current_player.space
+      = link_to current_player.space.name, controller: 'world'
+    - else
+      = link_to "You are lost! - reset?", controller: 'player', action: 'reset'
+
   %li.debug
     = current_player

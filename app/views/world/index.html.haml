@@ -1,2 +1,17 @@
-%h1 World#index
-%p Find me in app/views/world/index.html.erb
+- if current_player.space
+  %h1
+    = current_player.space.name
+
+  %p
+    You are currently at
+    %strong
+      = current_player.space.name
+
+  %p 
+    %i
+      = current_player.space.description
+
+- else
+  %h1 You are lost
+  %p
+    = link_to 'Restart the game', controller: 'player', action: 'reset'
