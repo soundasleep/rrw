@@ -7,4 +7,14 @@ class Character < ActiveRecord::Base
       Space.where(:id => self.space_id).first
     end
   end
+
+  # Get the amount of damage that this character can deal, as a string.
+  def get_damage
+    1 + Random.rand(3)
+  end
+
+  # Get the amount of damage that this character can deal, as a string.
+  def get_damage_string
+    return "1d3"
+  end
 end

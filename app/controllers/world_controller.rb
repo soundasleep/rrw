@@ -71,10 +71,11 @@ class WorldController < ApplicationController
   private
 
   def do_attack(p1, p2)
-    damage = 1
+    damage = p1.get_damage
+    damage_string = p1.get_damage_string
     p2.current_health -= damage
     p2.save()
-    add_combat_log "#{p1.name} attacked #{p2.name} causing #{damage} damage"
+    add_combat_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
     if p2.current_health <= 0
       p2.died_at = Time.now
       p2.save()
