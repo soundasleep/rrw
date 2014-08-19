@@ -1,0 +1,21 @@
+%h1 Player#show
+%p Find me in app/views/player/show.html.erb
+
+%dl{:class => "character-sheet"}
+  %dt Name
+  %dd= @player.name
+
+  %dt Level
+  %dd= @player.level
+
+  %dt Health
+  %dd 
+    = @player.current_health
+    \/
+    = @player.total_health
+
+  %dt Mana
+  %dd 
+    = @player.current_mana
+    \/
+    = @player.total_mana
