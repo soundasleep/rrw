@@ -34,4 +34,8 @@ class Player < Character
   def next_level_xp
     (20.0 ** (1 + 0.2 * (level - 1)) - 10).to_i
   end
+
+  def player_items
+    PlayerItem.where(:player => self)
+  end
 end

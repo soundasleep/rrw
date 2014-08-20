@@ -26,3 +26,13 @@
     = current_player.current_mana
     \/
     = current_player.total_mana
+
+  %dt Inventory
+  %dd
+    - if current_player.player_items.length > 0
+      %ul
+        - current_player.player_items.each do |item|
+          %li
+            #{item.quantity} x #{item.item_type.name}
+    - else
+      %i (your inventory is empty)

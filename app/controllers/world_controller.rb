@@ -76,6 +76,43 @@ class WorldController < ApplicationController
     redirect_to "/world/index"
   end
 
+  def buy
+    return unless player_is_valid?
+    if current_player and params[:npc_sells]
+      npc_sells = NpcSells.where(:id => params[:npc_sells])
+      if npc_sells.length == 1
+        npc_sell = npc_sells.first
+        if current_player.gold >= npc_sell.item_type.base_cost
+          if npc_sell.current_quantity > 0
+            npc_sell.current_quantity -= 1
+            current_player.gold -= npc_sell.item_type.base_cost
+            # does the current player have one of these already?
+            existing_items = PlayerItem.where(:player => current_player, :item_type => npc_sell.item_type)
+            if existing_items.length >= 1
+              # update quantity
+              existing_items.first.quantity += 1
+              existing_items.first.save()
+            else
+              # create a new one
+              item = PlayerItem.new(:player => current_player, :item_type => npc_sell.item_type, :quantity => 1)
+              item.save()
+            end
+            npc_sell.save()
+            current_player.save()
+            add_combat_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.item_type.base_cost}g"
+            return redirect_to "/world/index"
+          else
+            add_error "That NPC does not have any of those to sell to you"
+            return redirect_to "/world/index"
+          end
+        else
+          add_error "You do not have enough gold to purchase that"
+          return redirect_to "/world/index"
+        end
+      end
+    end
+  end
+
   # helper methods
 
   helper_method :nearby_players
