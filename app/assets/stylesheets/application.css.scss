@@ -9,79 +9,19 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
  */
 @import "bourbon";
 $blue: #275DAA;
 @import "bitters";
 @import "neat";
 
-.navigation {
-  background: $dark-gray;
-  color: white;
-  padding: 5px;
-  border-radius: 5px;
-  text-align: center;
-  margin-bottom: 15px;
+@import "globals";
 
-  a {
-    color: $light-yellow;
-    font-weight: bold;
-    text-decoration: underline;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  li {
-    display: inline-block;
-  }
-
-  li + li:before {
-    content: ' - ';
-  }
-}
+@import "navigation";
+@import "player";
+@import "world";
+@import "scores";
 
 body {
   @include outer-container;
-
-  .world, .character-sheet {
-    @include span-columns(6);
-  }
-  .actions, .inventory {
-    @include span-columns(6);
-  }
-  .world {
-    ul.nearby-players, ul.nearby-npcs {
-      @extend %default-ul;
-    }
-  }
-}
-
-a:hover {
-  text-decoration: underline;
-}
-form {
-  margin: 5px 0;
-}
-
-h1 {
-  margin: 5px 0 10px 0;
-}
-h2 {
-  margin: 5px 0 5px 0;
-}
-
-table {
-  td + td, th + th {
-    padding-left: 10px;
-  }
-  .number {
-    text-align: right;
-  }
-}
-
-.high-scores {
-  table-layout: auto;
 }

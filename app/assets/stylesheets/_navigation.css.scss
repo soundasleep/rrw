@@ -1,0 +1,26 @@
+.navigation {
+  background: $dark-gray;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 15px;
+
+  a {
+    color: $light-yellow;
+    font-weight: bold;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  li {
+    display: inline-block;
+  }
+
+  li + li:before {
+    content: ' - ';
+  }
+}
