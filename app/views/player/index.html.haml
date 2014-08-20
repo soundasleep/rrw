@@ -34,5 +34,10 @@
         - current_player.player_items.each do |item|
           %li
             #{item.quantity} x #{item.item_type.name}
+            - if item.item_type.can_use?
+              = form_tag("/world/use", method: "post") do
+                = hidden_field_tag(:player_item, item.id)
+                = submit_tag("Use")
+
     - else
       %i (your inventory is empty)

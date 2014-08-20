@@ -3,6 +3,7 @@ Rrw::Application.routes.draw do
   post "world/travel"
   post "world/attack"
   post "world/buy"
+  post "world/use"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
