@@ -45,11 +45,11 @@
             - if item.item_type.can_equip?
               - if item.equipped?
                 %strong (equipped)
-                = form_tag("/world/equip", method: "post") do
+                = form_tag("/world/unequip", method: "post") do
                   = hidden_field_tag(:player_item, item.id)
                   = submit_tag("Unequip")
               - else
-                = form_tag("/world/unequip", method: "post") do
+                = form_tag("/world/equip", method: "post") do
                   = hidden_field_tag(:player_item, item.id)
                   = submit_tag("Equip")
 

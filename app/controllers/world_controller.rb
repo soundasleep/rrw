@@ -163,6 +163,67 @@ class WorldController < ApplicationController
     redirect_to "/world/index"
   end
 
+  def equip
+    return unless player_is_valid?
+
+    if current_player and params[:player_item]
+      player_items = PlayerItem.where(:id => params[:player_item])
+      if player_items.length == 1
+        player_item = player_items.first
+        if player_item.item_type.can_equip?
+          player_item.equipped = true
+          player_item.save()
+          add_combat_log "Equipped #{player_item.item_type.name}"
+
+          # unequip any other weapons
+          if player_item.item_type.is_weapon?
+            PlayerItem.where(:player => current_player).select { |pi| pi != player_item and pi.item_type.is_weapon? }.each do |pi|
+              pi.equipped = false
+              pi.save()
+              add_combat_log "Unequipped #{pi.item_type.name}"
+            end
+          end
+
+          # success
+          return redirect_to "/player/index"
+
+        else
+          add_error "You cannot equip a #{player_item.item_type.name}"
+          return redirect_to "/player/index"
+        end
+      end
+    end
+
+    add_error "Could not find that item to equip"
+    redirect_to "/player/index"
+  end
+
+  def unequip
+    return unless player_is_valid?
+
+    if current_player and params[:player_item]
+      player_items = PlayerItem.where(:id => params[:player_item])
+      if player_items.length == 1
+        player_item = player_items.first
+        if player_item.item_type.can_equip?
+          player_item.equipped = false
+          player_item.save()
+          add_combat_log "Unequipped #{player_item.item_type.name}"
+
+          # success
+          return redirect_to "/player/index"
+
+        else
+          add_error "You cannot equip a #{player_item.item_type.name}"
+          return redirect_to "/player/index"
+        end
+      end
+    end
+
+    add_error "Could not find that item to unequip"
+    redirect_to "/player/index"
+  end
+
   # helper methods
 
   helper_method :nearby_players
