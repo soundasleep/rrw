@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140820000342) do
+ActiveRecord::Schema.define(version: 20140820010818) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20140820000342) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "equipped"
   end
 
   add_index "player_items", ["item_type_id"], name: "index_player_items_on_item_type_id"

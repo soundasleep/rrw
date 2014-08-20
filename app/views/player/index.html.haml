@@ -2,7 +2,7 @@
 
 = link_to "Restart game", controller: 'player', action: 'reset'
 
-%dl{:class => "character-sheet"}
+%dl.character_sheet
   %dt Name
   %dd= current_player.name
 
@@ -33,10 +33,25 @@
         - current_player.player_items.each do |item|
           %li
             #{item.quantity} x #{item.item_type.name}
+            %i= item.item_type.description
+            -if item.item_type.is_weapon?
+              deals #{item.item_type.get_damage_string}
+
             - if item.item_type.can_use?
               = form_tag("/world/use", method: "post") do
                 = hidden_field_tag(:player_item, item.id)
                 = submit_tag("Use")
+
+            - if item.item_type.can_equip?
+              - if item.equipped?
+                %strong (equipped)
+                = form_tag("/world/equip", method: "post") do
+                  = hidden_field_tag(:player_item, item.id)
+                  = submit_tag("Unequip")
+              - else
+                = form_tag("/world/unequip", method: "post") do
+                  = hidden_field_tag(:player_item, item.id)
+                  = submit_tag("Equip")
 
     - else
       %i (your inventory is empty)

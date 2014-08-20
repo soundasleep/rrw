@@ -17,7 +17,13 @@ class PlayerController < ApplicationController
       @player.space_id = home_space.first.id
     end
 
-    @player.save
+    @player.save()
+
+    # give the player an item
+    item_type = ItemType.where(:item_type => "dagger").first
+    if item_type
+      player_item = PlayerItem.create(:item_type => item_type, :player => @player, :quantity => 1, :equipped => true).save()
+    end
 
     # save to session
     session[:player_id] = @player.id

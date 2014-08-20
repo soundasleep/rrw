@@ -7,6 +7,8 @@ class ItemType < ActiveRecord::Base
     case self.item_type
       when "potion_health"
         return ItemType_HealthPotion.new()
+      when "dagger"
+        return ItemType_Dagger.new()
       else
         raise ArgumentError, "Unknown item type #{self.item_type}"
     end
@@ -14,6 +16,18 @@ class ItemType < ActiveRecord::Base
 
   def can_use?
     get_model.can_use?
+  end
+
+  def can_equip?
+    get_model.can_equip?
+  end
+
+  def is_weapon?
+    get_model.is_weapon?
+  end
+
+  def get_damage_string
+    get_model.get_damage_string
   end
 
   # When using this item, will it reduce the quantity?
@@ -31,6 +45,14 @@ class ItemType_Abstract
   def can_use?
     false
   end
+
+  def can_equip?
+    false
+  end
+
+  def is_weapon?
+    false
+  end
 end
 
 class ItemType_HealthPotion < ItemType_Abstract
@@ -43,5 +65,19 @@ class ItemType_HealthPotion < ItemType_Abstract
     context.current_player.current_health += healed
     context.add_combat_log "Healed #{healed} health with #{item_type.name}"
     context.current_player.save()
+  end
+end
+
+class ItemType_Dagger < ItemType_Abstract
+  def can_equip?
+    true
+  end
+
+  def is_weapon?
+    true
+  end
+
+  def get_damage_string
+    "1d4"
   end
 end
