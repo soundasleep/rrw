@@ -40,6 +40,6 @@ class Player < Character
   end
 
   def inventory_size
-    PlayerItem.where(:player => self).map { |item| item.quantity }.inject(:+) || 0
+    PlayerItem.where(:player => self).map { |item| item.quantity }.inject(0, :+)
   end
 end

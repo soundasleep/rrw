@@ -1,5 +1,4 @@
-%h1 Player#index
-%p Find me in app/views/player/index.html.erb
+%h1= current_player.name
 
 = link_to "Restart game", controller: 'player', action: 'reset'
 
