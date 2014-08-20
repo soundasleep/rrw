@@ -18,9 +18,11 @@
     - errors.each do |e|
       %li.error
         = e
+    - clear_errors
 
 - if combat_log
   %ul.combat_log
     - combat_log.each do |e|
       %li.log
         = e
+    - clear_combat_log

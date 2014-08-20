@@ -17,42 +17,36 @@ class ApplicationController < ActionController::Base
 
   helper_method :errors
   helper_method :combat_log
+  helper_method :clear_errors
+  helper_method :clear_combat_log
 
   def errors
-    if not @_errors
-      @_errors = session[:errors]
-      session[:errors] = []
-    end
-    @_errors
+    session[:errors]
   end
 
   def combat_log
-    if not @_combat_log
-      @_combat_log = session[:combat_log]
-      session[:combat_log] = []
-    end
-    @_combat_log
+    session[:combat_log]
+  end
+
+  def clear_errors
+    session[:errors] = []
+  end
+
+  def clear_combat_log
+    session[:combat_log] = []
   end
 
   def add_error(e)
     if not session[:errors]
       session[:errors] = []
     end
-    if not @_errors
-      @_errors = []
-    end
     session[:errors].push e
-    @_errors.push e
   end
 
   def add_combat_log(e)
     if not session[:combat_log]
       session[:combat_log] = []
     end
-    if not @_combat_log
-      @_combat_log = []
-    end
     session[:combat_log].push e
-    @_combat_log.push e
   end
 end
