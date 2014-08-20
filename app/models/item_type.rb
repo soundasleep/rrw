@@ -30,6 +30,10 @@ class ItemType < ActiveRecord::Base
     get_model.get_damage_string
   end
 
+  def get_damage
+    get_model.get_damage
+  end
+
   # When using this item, will it reduce the quantity?
   def is_consumable?
     true
@@ -75,6 +79,10 @@ class ItemType_Dagger < ItemType_Abstract
 
   def is_weapon?
     true
+  end
+
+  def get_damage
+    1 + Random.rand(4)
   end
 
   def get_damage_string

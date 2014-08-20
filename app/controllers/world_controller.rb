@@ -151,16 +151,16 @@ class WorldController < ApplicationController
           end
 
           # success
-          return redirect_to "/world/index"
+          return redirect_to "/player/index"
         else
           add_error "You cannot use a #{player_item.item_type.name}"
-          return redirect_to "/world/index"
+          return redirect_to "/player/index"
         end
       end
     end
 
     add_error "Could not find that item to use"
-    redirect_to "/world/index"
+    redirect_to "/player/index"
   end
 
   def equip

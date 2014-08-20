@@ -42,4 +42,24 @@ class Player < Character
   def inventory_size
     PlayerItem.where(:player => self).map { |item| item.quantity }.inject(0, :+)
   end
+
+  def get_damage
+    if current_weapon
+      return current_weapon.item_type.get_damage
+    else
+      return self.get_damage
+    end
+  end
+
+  def get_damage_string
+    if current_weapon
+      return current_weapon.item_type.get_damage_string
+    else
+      return self.get_damage_string
+    end
+  end
+
+  def current_weapon
+    PlayerItem.where(:player => self, :equipped => true).select { |item| item.item_type.is_weapon? }.first
+  end
 end
