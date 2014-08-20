@@ -31,6 +31,18 @@ class WorldController < ApplicationController
       add_combat_log "#{p.name} has respawned"
     end
 
+    # reload
+    npcs = Npc.where(:space_id => current_player.space_id, :can_sell => true)
+
+    # respawn any npc_sells that need to respawn
+    npcs.select { |p| p.current_health > 0 }.each do |p|
+      NpcSells.where(:npc => p).select { |sell| sell.current_quantity < sell.max_quantity and sell.updated_at <= sell.respawns.seconds.ago }.each do |sell|
+        sell.current_quantity = sell.max_quantity
+        add_combat_log "#{p.name} has restocked their supply of #{sell.item_type.name}s"
+        sell.save()
+      end
+    end
+
     # resave the current player
     current_player.updated_at = Time.now
     current_player.save()

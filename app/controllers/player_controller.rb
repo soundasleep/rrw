@@ -12,7 +12,6 @@ class PlayerController < ApplicationController
     @player.level = 1
     @player.current_health = 20
     @player.total_health = 20
-    @player.gold = 20
     home_space = Space.where(:name => "Home")
     if home_space.length > 0
       @player.space_id = home_space.first.id

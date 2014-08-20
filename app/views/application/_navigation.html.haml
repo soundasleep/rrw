@@ -5,13 +5,14 @@
     - else
       = link_to "You are lost! - reset?", controller: 'player', action: 'reset'
 
-  %li.stats
-    - if current_player
+  - if current_player
+    %li.stats
       = link_to current_player.name, controller: 'player'
       (level #{current_player.level})
       #{current_player.current_health}/#{current_player.total_health} health, #{current_player.gold}g
-    - else
-      %i (new player)
+
+    %li.stats
+      = link_to "Inventory (#{current_player.inventory_size})", controller: 'player'
 
 - if errors
   %ul.errors

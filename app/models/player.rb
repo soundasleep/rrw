@@ -38,4 +38,8 @@ class Player < Character
   def player_items
     PlayerItem.where(:player => self)
   end
+
+  def inventory_size
+    PlayerItem.where(:player => self).map { |item| item.quantity }.inject(:+) || 0
+  end
 end
