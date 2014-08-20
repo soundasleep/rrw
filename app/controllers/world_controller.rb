@@ -101,17 +101,7 @@ class WorldController < ApplicationController
           if npc_sell.current_quantity > 0
             npc_sell.current_quantity -= 1
             current_player.gold -= npc_sell.item_type.base_cost
-            # does the current player have one of these already?
-            existing_items = PlayerItem.where(:player => current_player, :item_type => npc_sell.item_type)
-            if existing_items.length >= 1
-              # update quantity
-              existing_items.first.quantity += 1
-              existing_items.first.save()
-            else
-              # create a new one
-              item = PlayerItem.new(:player => current_player, :item_type => npc_sell.item_type, :quantity => 1)
-              item.save()
-            end
+            add_item current_player, npc_sell.item_type
             npc_sell.save()
             current_player.update_score()
             current_player.save()
@@ -278,7 +268,7 @@ class WorldController < ApplicationController
         # do post-combat mechanics: XP, loot
         if p1.can_xp?
           xp = p2.get_xp
-          add_combat_log "#{p1.name} gains #{xp} XP"
+          add_combat_log "#{p1.name} gained #{xp} XP"
           if p1.xp == nil
             p1.xp = 0
           end
@@ -288,13 +278,13 @@ class WorldController < ApplicationController
           # upgrade levels?
           if p1.xp >= p1.next_level_xp
             p1.level += 1
-            add_combat_log "#{p1.name} has achieved level #{p1.level}"
+            add_combat_log "#{p1.name} has achieved level #{p1.level}!"
             p1.current_health += 2
             p1.total_health += 2
             add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
             p1.save()
           else
-            add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
+            # add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
           end
         end
 
@@ -305,6 +295,12 @@ class WorldController < ApplicationController
           # maybe create a new Loot class?
           p1.gold += loot[:gold]
           p1.save()
+
+          # any other items?
+          loot[:items].each do |item_type|
+            add_combat_log "#{p1.name} also receives one #{item_type.name}"
+            add_item p1, item_type
+          end
         end
 
         # tracks score?
@@ -313,5 +309,22 @@ class WorldController < ApplicationController
         end
       end
     end
+
+    def add_item(player, item_type)
+      # does the current player have one of these already?
+      existing_items = PlayerItem.where(:player => player, :item_type => item_type)
+      if existing_items.length >= 1
+        # update quantity
+        existing_items.first.quantity += 1
+        existing_items.first.save()
+      else
+        # create a new one
+        item = PlayerItem.new(:player => player, :item_type => item_type, :quantity => 1)
+        item.save()
+      end
+      player.update_score()
+      player.save()
+    end
+
 end
 

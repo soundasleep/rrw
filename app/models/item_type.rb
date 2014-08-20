@@ -9,6 +9,8 @@ class ItemType < ActiveRecord::Base
         return ItemType_HealthPotion.new()
       when "dagger"
         return ItemType_Dagger.new()
+      when "sword"
+        return ItemType_Sword.new()
       else
         raise ArgumentError, "Unknown item type #{self.item_type}"
     end
@@ -72,7 +74,7 @@ class ItemType_HealthPotion < ItemType_Abstract
   end
 end
 
-class ItemType_Dagger < ItemType_Abstract
+class ItemType_Weapon < ItemType_Abstract
   def can_equip?
     true
   end
@@ -80,12 +82,24 @@ class ItemType_Dagger < ItemType_Abstract
   def is_weapon?
     true
   end
+end
 
+class ItemType_Dagger < ItemType_Weapon
   def get_damage
     1 + Random.rand(4)
   end
 
   def get_damage_string
     "1d4"
+  end
+end
+
+class ItemType_Sword < ItemType_Weapon
+  def get_damage
+    1 + Random.rand(8)
+  end
+
+  def get_damage_string
+    "1d8"
   end
 end

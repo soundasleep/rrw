@@ -1,4 +1,25 @@
 class Npc < Character
+  # Get an emulated super type representing the ItemType through the
+  # ItemType.item_type key.
+  # By putting this into the Ruby logic, we don't have to try and store all item properties
+  # and behaviour in the database model; we only have to track the item_types.
+  def get_model
+    case self.character_type
+      when "innkeeper"
+        return Npc_Innkeeper.new()
+      when "mouse"
+        return Npc_Mouse.new()
+      when "spider"
+        return Npc_Spider.new()
+      when "lizard"
+        return Npc_Lizard.new()
+      when "ice_dragon"
+        return Npc_IceDragon.new()
+      else
+        raise ArgumentError, "Unknown character type #{self.character_type}"
+    end
+  end
+
   after_initialize :init
 
   # Initialise model defaults
@@ -21,4 +42,98 @@ class Npc < Character
     end
   end
 
+  def get_damage
+    get_model.get_damage
+  end
+
+  def get_damage_string
+    get_model.get_damage_string
+  end
+
+  # Return an array of drops (ItemTypes) that this character will have dropped on death.
+  # Can be random etc
+  def get_drops
+    get_model.get_drops
+  end
+
+end
+
+class Npc_Abstract
+  def get_drops
+    []
+  end
+end
+
+class Npc_Innkeeper < Npc_Abstract
+  def get_damage
+    1 + Random.rand(30)
+  end
+  def get_damage_string
+    "1d30"
+  end
+end
+
+class Npc_Mouse < Npc_Abstract
+  def get_damage
+    1 + Random.rand(3)
+  end
+  def get_damage_string
+    "1d3"
+  end
+
+  def get_drops
+    drops = []
+    if Random.rand(2) < 1
+      drops.push ItemType.where(:item_type => "dagger").first()
+    end
+    return drops
+  end
+end
+
+class Npc_Spider < Npc_Abstract
+  def get_damage
+    1 + Random.rand(4)
+  end
+  def get_damage_string
+    "1d4"
+  end
+
+  def get_drops
+    drops = []
+    if Random.rand(2) < 1
+      drops.push ItemType.where(:item_type => "dagger").first()
+    end
+    return drops
+  end
+end
+
+class Npc_Lizard < Npc_Abstract
+  def get_damage
+    1 + Random.rand(5)
+  end
+
+  def get_damage_string
+    "1d5"
+  end
+
+  def get_drops
+    drops = []
+    drops.push ItemType.where(:item_type => "sword").first()
+    return drops
+  end
+end
+
+class Npc_IceDragon < Npc_Abstract
+  def get_damage
+    1 + Random.rand(10)
+  end
+  def get_damage_string
+    "1d10"
+  end
+
+  def get_drops
+    drops = []
+    drops.push ItemType.where(:item_type => "sapphire").first()
+    return drops
+  end
 end

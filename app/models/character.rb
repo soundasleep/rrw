@@ -42,7 +42,12 @@ class Character < ActiveRecord::Base
   def get_loot
     {
       :gold => Random.rand(level * 5),
+      :items => get_drops
     }
+  end
+
+  def get_drops
+    []
   end
 
   # Get the amount of XP that killing this character would return
