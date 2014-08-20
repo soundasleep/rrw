@@ -10,8 +10,9 @@
  *
  *= require_self
  */
+@import "variables";
+
 @import "bourbon";
-$blue: #275DAA;
 @import "bitters";
 @import "neat";
 
