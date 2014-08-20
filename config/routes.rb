@@ -28,6 +28,9 @@ Rrw::Application.routes.draw do
   get "player/new"
   post "player/create"
 
+  get "scores/index"
+  get "scores" => "scores#index"
+
   # Example resource route with options:
   #   resources :products do
   #     member do

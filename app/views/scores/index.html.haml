@@ -1,0 +1,30 @@
+%h1 High Scores
+
+%table
+  %thead
+    %tr
+      %th
+      %th Player
+      %th Level
+      %th.number Score
+      %th Last seen
+      %th At
+      %th Killed by
+  %tbody
+    - @players.each_with_index do |player, index|
+      %tr
+        %td.number #{index + 1}.
+        %td
+          = player.name
+          - if player == current_player
+            %strong (you!)
+        %td
+          = player.level
+          - if player.current_health > 0
+            %strong (alive)
+        %td.number= player.score
+        %td #{time_ago_in_words(player.updated_at)} ago
+        %td #{player.space.name}
+        %td
+          - if player.killed_by
+            #{player.killed_by.name}

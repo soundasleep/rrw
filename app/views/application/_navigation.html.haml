@@ -14,6 +14,11 @@
     %li.stats
       = link_to "Inventory (#{current_player.inventory_size})", controller: 'player'
 
+  %li.score
+    - if current_player
+      Score: #{current_player.score}
+    = link_to "High scores", controller: 'scores'
+
 - if errors
   %ul.errors
     - errors.each do |e|

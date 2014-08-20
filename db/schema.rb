@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140820010818) do
+ActiveRecord::Schema.define(version: 20140820025122) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -100,9 +100,11 @@ ActiveRecord::Schema.define(version: 20140820010818) do
     t.integer  "xp"
     t.integer  "killed_by_id"
     t.datetime "died_at"
+    t.integer  "score"
   end
 
   add_index "players", ["killed_by_id"], name: "index_players_on_killed_by_id"
+  add_index "players", ["score"], name: "index_players_on_score"
   add_index "players", ["space_id"], name: "index_players_on_space_id"
 
   create_table "sessions", force: true do |t|

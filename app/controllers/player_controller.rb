@@ -17,6 +17,7 @@ class PlayerController < ApplicationController
       @player.space_id = home_space.first.id
     end
 
+    @player.update_score()
     @player.save()
 
     # give the player an item

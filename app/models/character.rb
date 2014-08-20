@@ -23,6 +23,10 @@ class Character < ActiveRecord::Base
     false
   end
 
+  def track_score?
+    false
+  end
+
   # Get the amount of damage that this character can deal, as a string.
   def get_damage
     1 + Random.rand(3)

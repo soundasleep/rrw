@@ -45,6 +45,7 @@ class WorldController < ApplicationController
 
     # resave the current player
     current_player.updated_at = Time.now
+    current_player.update_score()
     current_player.save()
   end
 
@@ -56,6 +57,7 @@ class WorldController < ApplicationController
       c = Connection.where(:from_id => space.id, :id => params[:connection])
       if c.length > 0
         current_player.space_id = c.first.to_id
+        current_player.update_score()
         current_player.save()
         return redirect_to "/world/index"
       end
@@ -111,6 +113,7 @@ class WorldController < ApplicationController
               item.save()
             end
             npc_sell.save()
+            current_player.update_score()
             current_player.save()
             add_combat_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.item_type.base_cost}g"
             return redirect_to "/world/index"
@@ -302,6 +305,11 @@ class WorldController < ApplicationController
           # maybe create a new Loot class?
           p1.gold += loot[:gold]
           p1.save()
+        end
+
+        # tracks score?
+        if p1.track_score?
+          p1.update_score()
         end
       end
     end

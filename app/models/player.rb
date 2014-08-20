@@ -11,6 +11,7 @@ class Player < Character
     self.total_mana ||= 0
     self.gold ||= 0
     self.xp ||= 0
+    self.score ||= 0
   end
 
   def killed_by
@@ -28,6 +29,10 @@ class Player < Character
   end
 
   def track_killed_by?
+    true
+  end
+
+  def track_score?
     true
   end
 
@@ -61,5 +66,10 @@ class Player < Character
 
   def current_weapon
     PlayerItem.where(:player => self, :equipped => true).select { |item| item.item_type.is_weapon? }.first
+  end
+
+  def update_score
+    self.score = (xp ** 1.05).to_i + PlayerItem.where(:player => self).map { |item| item.item_type.base_cost * item.quantity }.inject(0, :+) + (gold / 10) - 20
+    self.save()
   end
 end
