@@ -1,70 +1,73 @@
 - if current_player.space
-  %h1
-    = current_player.space.name
-
-  %p
-    You are currently at
-    %strong
+  .world
+    %h1
       = current_player.space.name
 
-  %p
-    %i
-      = current_player.space.description
+    %p
+      You are currently at
+      %strong
+        = current_player.space.name
 
-  %p
-    There are #{nearby_players.length} people here:
-    %ul
-      - nearby_players.each do |p|
-        %li
-          - if p.id == current_player.id
-            %strong You!
-          - else
-            = p.name
-          (level #{p.level}, #{p.current_health}/#{p.total_health} health)
+    %p
+      %i
+        = current_player.space.description
 
-  - if nearby_npcs.length > 0
-    %p There are #{nearby_npcs.length} NPCs here:
-    %ul
-      - nearby_npcs.each do |p|
-        %li
-          = p.name
-          (level #{p.level}, #{p.current_health}/#{p.total_health} health)
-          - if p.friendly
-            (friendly)
-          - else
-            %strong enemy!
-          - if p.attacking
-            attacking
-            - if p.attacking.id == current_player.id
-              %strong you!
+    %p
+      There are #{nearby_players.length} people here:
+      %ul.nearby-players
+        - nearby_players.each do |p|
+          %li
+            - if p.id == current_player.id
+              %strong You!
             - else
-              = p.attacking.name
+              = p.name
+            (level #{p.level}, #{p.current_health}/#{p.total_health} health)
 
-  %h2 Travel
-  - current_player.space.connections.each do |c|
-    = form_tag("/world/travel", method: "post") do
-      = hidden_field_tag(:connection, c.id)
-      = submit_tag("Go #{c.name}")
+    - if nearby_npcs.length > 0
+      %p There are #{nearby_npcs.length} NPCs here:
+      %ul.nearby-npcs
+        - nearby_npcs.each do |p|
+          %li
+            = p.name
+            (level #{p.level}, #{p.current_health}/#{p.total_health} health)
+            - if p.friendly
+              (friendly)
+            - else
+              %strong enemy!
+            - if p.attacking
+              attacking
+              - if p.attacking.id == current_player.id
+                %strong you!
+              - else
+                = p.attacking.name
 
-  = form_tag("/world/index", method: "get") do
-    = submit_tag("Look around again")
+  .actions
+    %h2 Travel
+    - current_player.space.connections.each do |c|
+      = form_tag("/world/travel", method: "post") do
+        = hidden_field_tag(:connection, c.id)
+        = submit_tag("Go #{c.name}")
 
-  - if nearby_enemies.length > 0
-    %h2 Attack
-    - nearby_enemies.each do |p|
-      = form_tag("/world/attack", method: "post") do
-        = hidden_field_tag(:npc, p.id)
-        = submit_tag("Attack #{p.name}")
+    = form_tag("/world/index", method: "get") do
+      = submit_tag("Look around again")
 
-  - if nearby_npcs_selling.length > 0
-    %h2 Buy
-    - nearby_npcs_selling.each do |p|
-      - p.selling.each do |item|
-        = form_tag("/world/buy", method: "post") do
-          = hidden_field_tag(:npc_sells, item.id)
-          = submit_tag("Buy one #{item.item_type.name} from #{p.name} for #{item.item_type.base_cost}g", :disabled => current_player.gold < item.item_type.base_cost)
+    - if nearby_enemies.length > 0
+      %h2 Attack
+      - nearby_enemies.each do |p|
+        = form_tag("/world/attack", method: "post") do
+          = hidden_field_tag(:npc, p.id)
+          = submit_tag("Attack #{p.name}")
+
+    - if nearby_npcs_selling.length > 0
+      %h2 Buy
+      - nearby_npcs_selling.each do |p|
+        - p.selling.each do |item|
+          = form_tag("/world/buy", method: "post") do
+            = hidden_field_tag(:npc_sells, item.id)
+            = submit_tag("Buy one #{item.item_type.name} from #{p.name} for #{item.item_type.base_cost}g", :disabled => current_player.gold < item.item_type.base_cost)
 
 - else
-  %h1 You are lost
-  %p
-    = link_to 'Restart the game', controller: 'player', action: 'reset'
+  .world
+    %h1 You are lost
+    %p
+      = link_to 'Restart the game', controller: 'player', action: 'reset'
