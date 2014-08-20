@@ -11,3 +11,44 @@
  *= require_self
  *= require_tree .
  */
+@import "bourbon";
+$blue: #275DAA;
+@import "bitters";
+
+.navigation {
+
+  background: $dark-gray;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+
+  a {
+    color: $light-yellow;
+    font-weight: bold;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  li {
+    display: inline-block;
+  }
+
+  li + li:before {
+    content: ' - ';
+  }
+}
+
+form {
+  margin: 5px 0;
+}
+
+h1 {
+  margin: 5px 0 10px 0;
+}
+h2 {
+  margin: 2px 0 5px 0;
+}

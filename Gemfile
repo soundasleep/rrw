@@ -9,6 +9,9 @@ gem 'sqlite3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
+# Because sprokets/gems are broken in 2.12.0 http://stackoverflow.com/questions/22392862/undefined-method-environment-for-nilnilclass-when-importing-bootstrap
+gem 'sprockets', '2.11.0'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
@@ -49,3 +52,7 @@ gem 'haml'
 
 # Use active_record_store for storing session objects
 gem 'activerecord-session_store'
+
+# Styles
+gem 'bourbon', '>= 4.0.0'
+gem 'bitters', :git => 'https://github.com/soundasleep/bitters.git'
