@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819050234) do
+ActiveRecord::Schema.define(version: 20140820000342) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -23,6 +23,28 @@ ActiveRecord::Schema.define(version: 20140819050234) do
 
   add_index "connections", ["from_id"], name: "index_connections_on_from_id"
   add_index "connections", ["to_id"], name: "index_connections_on_to_id"
+
+  create_table "item_types", force: true do |t|
+    t.string   "name"
+    t.string   "item_type"
+    t.text     "description"
+    t.integer  "base_cost"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "npc_sells", force: true do |t|
+    t.integer  "npc_id"
+    t.integer  "item_type_id"
+    t.integer  "current_quantity"
+    t.integer  "max_quantity"
+    t.integer  "respawns"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "npc_sells", ["item_type_id"], name: "index_npc_sells_on_item_type_id"
+  add_index "npc_sells", ["npc_id"], name: "index_npc_sells_on_npc_id"
 
   create_table "npcs", force: true do |t|
     t.string   "name"
@@ -37,11 +59,24 @@ ActiveRecord::Schema.define(version: 20140819050234) do
     t.integer  "respawns"
     t.datetime "died_at"
     t.string   "character_type"
+    t.boolean  "can_sell"
   end
 
   add_index "npcs", ["attacking_id"], name: "index_npcs_on_attacking_id"
+  add_index "npcs", ["can_sell"], name: "index_npcs_on_can_sell"
   add_index "npcs", ["character_type"], name: "index_npcs_on_character_type"
   add_index "npcs", ["space_id"], name: "index_npcs_on_space_id"
+
+  create_table "player_items", force: true do |t|
+    t.integer  "player_id"
+    t.integer  "item_type_id"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "player_items", ["item_type_id"], name: "index_player_items_on_item_type_id"
+  add_index "player_items", ["player_id"], name: "index_player_items_on_player_id"
 
   create_table "players", force: true do |t|
     t.string   "name"
