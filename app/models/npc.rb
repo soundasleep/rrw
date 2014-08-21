@@ -94,7 +94,7 @@ class Npc_Mouse < Npc_Abstract
 
   def get_drops
     drops = []
-    if Random.rand(2) < 1
+    if Random.rand(4) < 1
       drops.push ItemType.where(:item_type => "dagger").first()
     end
     return drops

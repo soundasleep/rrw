@@ -52,7 +52,7 @@ class Player < Character
     if current_weapon
       return current_weapon.item_type.get_damage
     else
-      return self.get_damage
+      return super
     end
   end
 
@@ -60,7 +60,7 @@ class Player < Character
     if current_weapon
       return current_weapon.item_type.get_damage_string
     else
-      return self.get_damage_string
+      return super
     end
   end
 
