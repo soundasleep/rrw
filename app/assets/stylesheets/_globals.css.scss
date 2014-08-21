@@ -1,4 +1,3 @@
-
 a:hover {
   text-decoration: underline;
 }
@@ -20,4 +19,10 @@ table {
   .number {
     text-align: right;
   }
+}
+
+button, input[type="submit"] {
+  max-width: 100%;
+  white-space: normal;
+  font-family: $helvetica;
 }

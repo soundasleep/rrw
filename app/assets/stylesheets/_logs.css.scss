@@ -1,0 +1,51 @@
+/* styling combat logs and errors */
+
+.logs {
+  @include span-columns(3);
+
+  margin-top: 15px;
+
+  .combat-log, .error-log {
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 0.75em;
+
+    ul {
+      @extend %default-ul;
+      margin-bottom: 0;
+
+      li {
+        margin-left: -5px;
+        line-height: 130%;
+        font-size: 90%;
+
+        & + li {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+
+  .combat-log {
+    background: #EAE0A0;
+  }
+
+  .error-log {
+    background: #F6A386;
+  }
+}
+
+.content {
+  @include span-columns(9);
+
+  .world {
+    @include span-columns(7);
+  }
+  .actions {
+    @include span-columns(5);
+  }
+
+}
+

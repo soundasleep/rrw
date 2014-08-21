@@ -18,17 +18,3 @@
     - if current_player
       Score: #{current_player.score}
     = link_to "High scores", controller: 'scores'
-
-- if errors
-  %ul.errors
-    - errors.each do |e|
-      %li.error
-        = e
-    - clear_errors
-
-- if combat_log
-  %ul.combat_log
-    - combat_log.each do |e|
-      %li.log
-        = e
-    - clear_combat_log

@@ -1,0 +1,15 @@
+- if errors
+  .error-log
+    %ul
+      - errors.each do |e|
+        %li.error
+          = e
+      - clear_errors
+
+- if combat_log
+  .combat-log
+    %ul
+      - combat_log.each do |e|
+        %li.log
+          = e
+      - clear_combat_log

@@ -3,5 +3,5 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .character-sheet, .inventory {
-  @include span-columns(6);
+  @include span-columns(4);
 }

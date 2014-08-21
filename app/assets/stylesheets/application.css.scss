@@ -19,10 +19,13 @@
 @import "globals";
 
 @import "navigation";
+@import "logs";
 @import "player";
 @import "world";
 @import "scores";
 
 body {
+  margin: 10px;
+
   @include outer-container;
 }
