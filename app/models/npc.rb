@@ -36,9 +36,20 @@ class Npc < Character
   end
 
   # what can this NPC currently sell?
+  # Returns NpcSells
   def selling
     if self.can_sell
       NpcSells.where(:npc => self).select { |i| i.current_quantity > 0 }
+    end
+  end
+
+  # what can this NPC currently buy from this inventory?
+  # Returns NpcBuys
+  def buying(player)
+    if self.can_buy
+      NpcBuys.where(:npc => self).select do |buy|
+        PlayerItem.where(:player_id => player.id, :item_type_id => buy.item_type_id).length > 0
+      end
     end
   end
 

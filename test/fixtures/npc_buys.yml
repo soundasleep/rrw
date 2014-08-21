@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  npc_id: 
+  item_type_id: 
+  multiplier: 1.5
+
+two:
+  npc_id: 
+  item_type_id: 
+  multiplier: 1.5

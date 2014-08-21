@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140820025122) do
+ActiveRecord::Schema.define(version: 20140821024924) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -33,6 +33,17 @@ ActiveRecord::Schema.define(version: 20140820025122) do
     t.datetime "updated_at"
   end
 
+  create_table "npc_buys", force: true do |t|
+    t.integer  "npc_id"
+    t.integer  "item_type_id"
+    t.float    "multiplier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "npc_buys", ["item_type_id"], name: "index_npc_buys_on_item_type_id"
+  add_index "npc_buys", ["npc_id"], name: "index_npc_buys_on_npc_id"
+
   create_table "npc_sells", force: true do |t|
     t.integer  "npc_id"
     t.integer  "item_type_id"
@@ -41,6 +52,7 @@ ActiveRecord::Schema.define(version: 20140820025122) do
     t.integer  "respawns"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "multiplier"
   end
 
   add_index "npc_sells", ["item_type_id"], name: "index_npc_sells_on_item_type_id"
@@ -60,9 +72,11 @@ ActiveRecord::Schema.define(version: 20140820025122) do
     t.datetime "died_at"
     t.string   "character_type"
     t.boolean  "can_sell"
+    t.boolean  "can_buy"
   end
 
   add_index "npcs", ["attacking_id"], name: "index_npcs_on_attacking_id"
+  add_index "npcs", ["can_buy"], name: "index_npcs_on_can_buy"
   add_index "npcs", ["can_sell"], name: "index_npcs_on_can_sell"
   add_index "npcs", ["character_type"], name: "index_npcs_on_character_type"
   add_index "npcs", ["space_id"], name: "index_npcs_on_space_id"

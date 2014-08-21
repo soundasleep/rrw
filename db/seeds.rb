@@ -28,7 +28,7 @@ connect(spaces, :forest, :mountain_peak, "up into the mountains", "down into the
 npcs = {
   # TODO fix the model so we can use :space => rather than :space_id =>
   :inn => {
-    :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 50, :total_health => 50, :level => 20, :respawns => 60, :space_id => spaces[:inn].id, :character_type => "innkeeper", :can_sell => true),
+    :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 50, :total_health => 50, :level => 20, :respawns => 60, :space_id => spaces[:inn].id, :character_type => "innkeeper", :can_sell => true, :can_buy => true),
     :innkeeper_mouse1 => Npc.create(:name => "Mouse 1", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
     :innkeeper_mouse2 => Npc.create(:name => "Mouse 2", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
     :innkeeper_mouse3 => Npc.create(:name => "Mouse 3", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
@@ -56,4 +56,8 @@ items = {
   :sapphire => ItemType.create(:name => "Sapphire", :item_type => "sapphire", :description => "A shiny sapphire gem that's probably worth a lot", :base_cost => 200),
 }
 
-NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 5, :max_quantity => 5, :respawns => 60)
+NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1.34)
+
+items.each do |key, value|
+  NpcBuys.create(:npc => npcs[:inn][:innkeeper], :item_type => value, :multiplier => 0.67)
+end

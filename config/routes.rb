@@ -3,6 +3,7 @@ Rrw::Application.routes.draw do
   post "world/travel"
   post "world/attack"
   post "world/buy"
+  post "world/sell"
   post "world/use"
   post "world/equip"
   post "world/unequip"

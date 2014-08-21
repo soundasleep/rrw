@@ -122,6 +122,30 @@ class WorldController < ApplicationController
     redirect_to "/world/index"
   end
 
+  def sell
+    return unless player_is_valid?
+
+    if current_player and params[:npc_buys]
+      npc_buys = NpcBuys.where(:id => params[:npc_buys])
+      if npc_buys.length == 1
+        npc_buy = npc_buys.first
+        if remove_item current_player, npc_buy.item_type
+          current_player.gold += npc_buy.cost
+          current_player.save()
+          # TODO should we restock the NPCs inventory too?
+          add_combat_log "You sold one #{npc_buy.item_type.name} to #{npc_buy.npc.name} for #{npc_buy.cost}g"
+          return redirect_to "/world/index"
+        else
+          add_error "You could not sell that item"
+          return redirect_to "/world/index"
+        end
+      end
+    end
+
+    add_error "Could not find that buyable item"
+    redirect_to "/world/index"
+  end
+
   def use
     return unless player_is_valid?
 
@@ -163,23 +187,9 @@ class WorldController < ApplicationController
       player_items = PlayerItem.where(:id => params[:player_item])
       if player_items.length == 1
         player_item = player_items.first
-        if player_item.item_type.can_equip?
-          player_item.equipped = true
-          player_item.save()
-          add_combat_log "Equipped #{player_item.item_type.name}"
-
-          # unequip any other weapons
-          if player_item.item_type.is_weapon?
-            PlayerItem.where(:player => current_player).select { |pi| pi != player_item and pi.item_type.is_weapon? }.each do |pi|
-              pi.equipped = false
-              pi.save()
-              add_combat_log "Unequipped #{pi.item_type.name}"
-            end
-          end
-
+        if equip_item(player_item)
           # success
           return redirect_to "/player/index"
-
         else
           add_error "You cannot equip a #{player_item.item_type.name}"
           return redirect_to "/player/index"
@@ -198,16 +208,11 @@ class WorldController < ApplicationController
       player_items = PlayerItem.where(:id => params[:player_item])
       if player_items.length == 1
         player_item = player_items.first
-        if player_item.item_type.can_equip?
-          player_item.equipped = false
-          player_item.save()
-          add_combat_log "Unequipped #{player_item.item_type.name}"
-
+        if unequip_item(player_item)
           # success
           return redirect_to "/player/index"
-
         else
-          add_error "You cannot equip a #{player_item.item_type.name}"
+          add_error "You cannot unequip a #{player_item.item_type.name}"
           return redirect_to "/player/index"
         end
       end
@@ -223,17 +228,27 @@ class WorldController < ApplicationController
   helper_method :nearby_npcs
   helper_method :nearby_enemies
   helper_method :nearby_npcs_selling
+  helper_method :nearby_npcs_buying
 
+  # Get Players
   def nearby_players
     Player.all(:conditions => ["space_id = ? and updated_at >= ? and current_health > 0", current_player.space_id, 10.minutes.ago])
   end
 
+  # Get Npcs
   def nearby_npcs
     Npc.all(:conditions => ["space_id = ? and current_health > 0", current_player.space_id])
   end
 
+  # Get Npcs
   def nearby_npcs_selling
     nearby_npcs.select { |p| p.can_sell }
+  end
+
+  # Get Npcs
+  def nearby_npcs_buying(player)
+    nearby_npcs.select { |p| p.can_buy }
+      .select { |p| p.buying(player).length > 0 }
   end
 
   def nearby_enemies
@@ -324,6 +339,65 @@ class WorldController < ApplicationController
       end
       player.update_score()
       player.save()
+    end
+
+    # return true if the removal was successful
+    def remove_item(player, item_type)
+      # does the current player have one of these already?
+      existing_items = PlayerItem.where(:player => player, :item_type => item_type)
+      if existing_items.length >= 1
+        # unequip if it is equippable
+        if existing_items.first.item_type.can_equip?
+          unequip_item(existing_items.first)
+        end
+        # update quantity
+        if existing_items.first.quantity > 1
+          existing_items.first.quantity -= 1
+          existing_items.first.save()
+        else
+          existing_items.first.destroy()
+        end
+        player.update_score()
+        player.save()
+        return true
+      else
+        return false
+      end
+    end
+
+    # if a weapon, unequips anything that was already equipped
+    # return true if the equip was successful
+    def equip_item(player_item)
+      if player_item.item_type.can_equip?
+        player_item.equipped = true
+        player_item.save()
+        add_combat_log "Equipped #{player_item.item_type.name}"
+
+        # unequip any other weapons
+        if player_item.item_type.is_weapon?
+          PlayerItem.where(:player => current_player).select { |pi| pi != player_item and pi.item_type.is_weapon? }.each do |pi|
+            pi.equipped = false
+            pi.save()
+            add_combat_log "Unequipped #{pi.item_type.name}"
+          end
+        end
+
+        return true
+      else
+        return false
+      end
+    end
+
+    # return true if the unequip was sucessful
+    def unequip_item(player_item)
+      if player_item.item_type.can_equip?
+        player_item.equipped = false
+        player_item.save()
+        add_combat_log "Unequipped #{player_item.item_type.name}"
+        return true
+      else
+        return true
+      end
     end
 
 end

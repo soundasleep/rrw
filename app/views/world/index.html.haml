@@ -67,6 +67,15 @@
             = button_tag(:disabled => current_player.gold < npc_sell.cost) do
               Buy one #{npc_sell.item_type.name} from #{p.name} for #{npc_sell.cost}g
 
+    - if nearby_npcs_buying(current_player).length > 0
+      %h2 Sell
+      - nearby_npcs_buying(current_player).each do |p|
+        - p.buying(current_player).each do |npc_buy|
+          = form_tag("/world/sell", method: "post") do
+            = hidden_field_tag(:npc_buys, npc_buy.id)
+            = button_tag do
+              Sell one #{npc_buy.item_type.name} to #{p.name} for #{npc_buy.cost}g
+
 - else
   .world
     %h1 You are lost
