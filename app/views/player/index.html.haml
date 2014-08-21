@@ -1,8 +1,6 @@
 .character-sheet
   %h1= current_player.name
 
-  = link_to "Restart game", controller: 'player', action: 'reset'
-
   %dl
     %dt Name
     %dd= current_player.name
@@ -26,6 +24,9 @@
       = current_player.current_mana
       \/
       = current_player.total_mana
+
+  = form_tag("/player/reset", method: "post") do
+    = submit_tag("Restart game")
 
 .inventory
   %h2 Inventory

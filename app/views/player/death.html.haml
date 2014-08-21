@@ -6,5 +6,7 @@
   - else
     You just died for some reason.
 
-= link_to "Restart game", controller: 'player', action: 'reset'
+= form_tag("/player/reset", method: "post") do
+  = submit_tag("Restart game")
+
 = link_to "High scores", controller: 'scores'

@@ -23,7 +23,7 @@ Rrw::Application.routes.draw do
   # resources :player
   get "player/index"
   get "player" => "player#index"
-  get "player/reset"
+  post "player/reset"
   get "player/death"
   get "player/new"
   post "player/create"
