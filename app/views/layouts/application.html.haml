@@ -6,8 +6,8 @@
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
 
-  %body
-    / identical to %div { :class => navigation }
+  %body{ :class => controller.class_name }
+    / identical to %div{ :class => navigation }
     .navigation
       = render "navigation"
 

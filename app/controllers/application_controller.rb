@@ -49,4 +49,8 @@ class ApplicationController < ActionController::Base
     end
     session[:combat_log].push e
   end
+
+  def class_name
+    "controller-" + controller_name + " controller-" + controller_name + "-" + action_name
+  end
 end

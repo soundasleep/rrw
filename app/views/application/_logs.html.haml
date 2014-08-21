@@ -1,4 +1,4 @@
-- if errors
+- if errors and errors.length > 0
   .error-log
     %ul
       - errors.each do |e|
@@ -6,7 +6,7 @@
           = e
       - clear_errors
 
-- if combat_log
+- if combat_log and combat_log.length > 0
   .combat-log
     %ul
       - combat_log.each do |e|
