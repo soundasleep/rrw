@@ -12,7 +12,7 @@
       %th Killed by
   %tbody
     - @players.each_with_index do |player, index|
-      %tr
+      %tr{:class => if player == current_player then "current-player" else "" end }
         %td.number #{index + 1}.
         %td
           = player.name
