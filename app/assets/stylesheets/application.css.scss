@@ -25,7 +25,5 @@
 @import "scores";
 
 body {
-  margin: 10px;
-
   @include outer-container;
 }

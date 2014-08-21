@@ -26,3 +26,9 @@ button, input[type="submit"] {
   white-space: normal;
   font-family: $helvetica;
 }
+html {
+  margin: 10px;
+  body {
+    margin: 0 auto;
+  }
+}
