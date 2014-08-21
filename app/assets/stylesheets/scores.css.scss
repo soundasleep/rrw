@@ -15,6 +15,10 @@
   .high-scores {
     table-layout: auto;
 
+    .odd {
+      background: darken(white, 5%);
+    }
+
     .current-player {
       background: $light-yellow;
     }
