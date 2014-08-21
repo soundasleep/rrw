@@ -61,11 +61,11 @@
     - if nearby_npcs_selling.length > 0
       %h2 Buy
       - nearby_npcs_selling.each do |p|
-        - p.selling.each do |item|
+        - p.selling.each do |npc_sell|
           = form_tag("/world/buy", method: "post") do
-            = hidden_field_tag(:npc_sells, item.id)
-            = button_tag(:disabled => current_player.gold < item.item_type.base_cost) do
-              Buy one #{item.item_type.name} from #{p.name} for #{item.item_type.base_cost}g
+            = hidden_field_tag(:npc_sells, npc_sell.id)
+            = button_tag(:disabled => current_player.gold < npc_sell.cost) do
+              Buy one #{npc_sell.item_type.name} from #{p.name} for #{npc_sell.cost}g
 
 - else
   .world
