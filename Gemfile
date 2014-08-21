@@ -57,3 +57,9 @@ gem 'activerecord-session_store'
 gem 'bourbon', '>= 4.0.0'
 gem 'bitters', :git => 'https://github.com/soundasleep/bitters.git'
 gem 'neat'
+
+# allows ENV[] and Figaro.env[] loaded from config/application.yml
+gem 'figaro'
+
+# allow Google login
+gem 'omniauth-google-oauth2'

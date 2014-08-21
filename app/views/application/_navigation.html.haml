@@ -18,3 +18,10 @@
     - if current_player
       Score: #{current_player.score}
     = link_to "High scores", controller: 'scores'
+
+  - if current_user
+    = link_to "Sign out", signout_path
+    = current_user.name
+    = current_user.inspect
+  - else
+    = link_to "Sign in with Google google_login", "/auth/google_login"

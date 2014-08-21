@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821024924) do
+ActiveRecord::Schema.define(version: 20140821043035) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -134,6 +134,17 @@ ActiveRecord::Schema.define(version: 20140821024924) do
   create_table "spaces", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "refresh_token"
+    t.string   "access_token"
+    t.datetime "expires"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

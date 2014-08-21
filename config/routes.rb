@@ -32,6 +32,9 @@ Rrw::Application.routes.draw do
   get "scores/index"
   get "scores" => "scores#index"
 
+  get "/auth/google_login/callback" => "sessions#create"
+  get "/signout" => "sessions#destroy", :as => :signout
+
   # Example resource route with options:
   #   resources :products do
   #     member do
