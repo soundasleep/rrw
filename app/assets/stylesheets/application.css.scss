@@ -20,9 +20,12 @@
 
 @import "navigation";
 @import "logs";
+
+// each controller
 @import "player";
 @import "world";
 @import "scores";
+@import "security";
 
 body {
   margin: 10px;

@@ -18,3 +18,6 @@
     - if current_player
       Score: #{current_player.score}
     = link_to "High scores", controller: 'scores'
+
+  %li.login
+    = link_to "Login", controller: 'security', action: 'login'

@@ -57,3 +57,5 @@ gem 'activerecord-session_store'
 gem 'bourbon', '>= 4.0.0'
 gem 'bitters', :git => 'https://github.com/soundasleep/bitters.git'
 gem 'neat'
+
+gem 'oauth2'

@@ -32,6 +32,10 @@ Rrw::Application.routes.draw do
   get "scores/index"
   get "scores" => "scores#index"
 
+  get "security/login"
+  get "security" => "security#login"
+  get "security/oauth2callback"
+
   # Example resource route with options:
   #   resources :products do
   #     member do

@@ -1,0 +1,9 @@
+%li= session[:token]
+%li= @token
+%li= @token.inspect
+%ol
+  - @token.params.each do |key, value|
+    %li #{key} = #{value}
+%li base64 decoded = #{Base64.decode64(@token.params['id_token'])}
+%li expired = #{@token.expired?}
+%li token = #{@token.token}
