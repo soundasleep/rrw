@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821043035) do
+ActiveRecord::Schema.define(version: 20140821054902) do
 
   create_table "connections", force: true do |t|
     t.string   "name"
@@ -115,11 +115,14 @@ ActiveRecord::Schema.define(version: 20140821043035) do
     t.integer  "killed_by_id"
     t.datetime "died_at"
     t.integer  "score"
+    t.integer  "user_id"
+    t.boolean  "is_active"
   end
 
   add_index "players", ["killed_by_id"], name: "index_players_on_killed_by_id"
   add_index "players", ["score"], name: "index_players_on_score"
   add_index "players", ["space_id"], name: "index_players_on_space_id"
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
 
   create_table "sessions", force: true do |t|
     t.string   "session_id", null: false

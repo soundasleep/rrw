@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   # `active_record_store` rather than the `cookie_store`:
   # http://stackoverflow.com/questions/9473808/cookie-overflow-in-rails-application
   def current_player
-    @_current_player ||= session[:player_id] && Player.find_by(id: session[:player_id])
+    @_current_player ||= Player.where(:user_id => current_user.id, :is_active => true).first if current_user
   end
 
   helper_method :current_user

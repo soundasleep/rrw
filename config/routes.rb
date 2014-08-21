@@ -32,6 +32,8 @@ Rrw::Application.routes.draw do
   get "scores/index"
   get "scores" => "scores#index"
 
+  get "sessions/index"
+  get "sessions" => "sessions#index"
   get "/auth/google_login/callback" => "sessions#create"
   get "/signout" => "sessions#destroy", :as => :signout
 

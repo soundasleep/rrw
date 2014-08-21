@@ -3,7 +3,7 @@
     - if current_player and current_player.space
       = link_to current_player.space.name, controller: 'world'
     - else
-      = link_to "You are lost! - reset?", controller: 'player', action: 'reset'
+      = link_to "Start game", controller: 'world'
 
   - if current_player
     %li.stats
@@ -20,8 +20,8 @@
     = link_to "High scores", controller: 'scores'
 
   - if current_user
-    = link_to "Sign out", signout_path
-    = current_user.name
-    = current_user.inspect
+    %li.sign-out
+      = link_to "Sign out", signout_path
   - else
-    = link_to "Sign in with Google google_login", "/auth/google_login"
+    %li.sign-in
+      = link_to "Sign in", "/auth/google_login"
