@@ -24,7 +24,9 @@
             %strong (alive)
         %td.number= player.score
         %td #{time_ago_in_words(player.updated_at)} ago
-        %td #{player.space.name}
+        %td
+          - if player.space
+            = player.space.name
         %td
           - if player.killed_by
             #{player.killed_by.name}
