@@ -4,6 +4,8 @@
 
 `rake db:setup` will setup the initial world.
 
+`rake test` will test the application with the data in `db/seeds.rb`.
+
 == TODO
 
 This README would normally document whatever steps are necessary to get the
