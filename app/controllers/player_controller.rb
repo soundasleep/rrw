@@ -16,8 +16,8 @@ class PlayerController < ApplicationController
     @player = Player.new(player_params)
 
     @player.level = 1
-    @player.current_health = 20
-    @player.total_health = 20
+    @player.current_health = 2000
+    @player.total_health = 2000
     @player.is_active = true
     @player.user_id = current_user.id
     home_space = Space.where(:name => "Home")
@@ -29,7 +29,7 @@ class PlayerController < ApplicationController
     @player.save()
 
     # give the player an item
-    item_type = ItemType.where(:item_type => "dagger").first
+    item_type = ItemType.where(:item_type => "sword").first
     if item_type
       PlayerItem.create(:item_type => item_type, :player => @player, :quantity => 1, :equipped => true).save()
     end

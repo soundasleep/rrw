@@ -4,6 +4,8 @@
 
 `rake db:setup` will setup the initial world.
 
+`rake db:test:load test` will test the application with the data in `db/seeds.rb` (ignore the deprecation warning for now [from Rails 4.1+](https://github.com/rails/rails/pull/13528)).
+
 == TODO
 
 This README would normally document whatever steps are necessary to get the
@@ -31,4 +33,4 @@ Things you may want to cover:
 
 
 Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+`rake doc:app`.

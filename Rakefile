@@ -4,3 +4,7 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rrw::Application.load_tasks
+
+# Require the reporter in your Rakefile, and ensure that ci:setup:minitest is a dependency of your minitest task:
+require 'ci/reporter/rake/minitest'
+task :test => 'ci:setup:minitest'
