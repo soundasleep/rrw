@@ -232,12 +232,12 @@ class WorldController < ApplicationController
 
   # Get Players
   def nearby_players
-    Player.all(:conditions => ["space_id = ? and updated_at >= ? and current_health > 0", current_player.space_id, 10.minutes.ago])
+    Player.where(:space_id => current_player.space_id).where("current_health > 0").where("updated_at >= ?", 10.minutes.ago)
   end
 
   # Get Npcs
   def nearby_npcs
-    Npc.all(:conditions => ["space_id = ? and current_health > 0", current_player.space_id])
+    Npc.where(:space_id => current_player.space_id).where("current_health > 0")
   end
 
   # Get Npcs
