@@ -1,7 +1,10 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.3'
+gem 'rails', '4.1.5'
+
+# Required for Rails 4.1+ on Windows
+gem 'tzinfo-data'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -63,3 +66,6 @@ gem 'figaro'
 
 # allow Google login
 gem 'omniauth-google-oauth2'
+
+# for CI: output test report XML
+gem 'ci_reporter_minitest', '~> 1.0.0'
