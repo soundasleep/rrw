@@ -16,8 +16,8 @@ class PlayerController < ApplicationController
     @player = Player.new(player_params)
 
     @player.level = 1
-    @player.current_health = 2000
-    @player.total_health = 2000
+    @player.current_health = 20
+    @player.total_health = 20
     @player.is_active = true
     @player.user_id = current_user.id
     home_space = Space.where(:name => "Home")
