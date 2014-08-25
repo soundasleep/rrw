@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.5'
@@ -69,3 +70,6 @@ gem 'omniauth-google-oauth2'
 
 # for CI: output test report XML
 gem 'ci_reporter_minitest', '~> 1.0.0'
+
+# Bower components
+gem 'rails-assets-moment'
