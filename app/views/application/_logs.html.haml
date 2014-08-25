@@ -18,7 +18,7 @@
   %ul.chat
     - if @chat
       - @chat.each do |chat|
-        %li.chat-template{ :class => (if chat[:is_entering] then "is-entering" else "" end) + (if chat[:is_leaving] then "is-leaving" else "" end) }
+        %li.chat-template{ :class => chat[:classes] }
           %span.time #{chat[:render_time]}
           %span.text #{chat[:render_text]}
 

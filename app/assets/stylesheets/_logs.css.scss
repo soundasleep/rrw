@@ -5,7 +5,7 @@
 
   margin-top: 15px;
 
-  .combat-log, .error-log, .chat {
+  .combat-log, .error-log {
     margin-left: auto;
     margin-right: auto;
     border-radius: 15px;
@@ -37,6 +37,12 @@
   }
 
   .chat-log {
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 0.75em;
+
     background: #CBD3DD;
     font-size: 90%;
 
@@ -54,7 +60,7 @@
     }
 
     li {
-      &.is-entering, &.is-leaving {
+      &.is-entering, &.is-leaving, &.is-death, &.is-new-player {
         .text {
           font-style: italic;
         }
@@ -64,6 +70,12 @@
       }
       &.is-leaving {
         color: #999;
+      }
+      &.is-death {
+        color: $red;
+      }
+      &.is-new-player {
+        color: $green;
       }
     }
 

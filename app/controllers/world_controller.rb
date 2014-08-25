@@ -61,11 +61,14 @@ class WorldController < ApplicationController
         :id => c.id,
         :is_entering => c.is_entering,
         :is_leaving => c.is_leaving,
+        :is_death => c.is_death,
+        :is_new_player => c.is_new_player,
         :text => c.text,
         :player_id => c.player_id,
         :created_at => c.created_at,
         :render_text => c.render_text,
         :render_time => c.render_time,
+        :classes => c.classes,
       })
     end
 
@@ -321,6 +324,8 @@ class WorldController < ApplicationController
         if p2.track_killed_by?
           p2.killed_by_id = p1.id
           p2.save()
+
+          Chat.new(:space => p2.space, :player => p2, :text => "died", :is_death => true).save()
 
           # stop the NPC attacking the player
           # TODO have a parent class for (players, NPCs) rather than this fragile logic

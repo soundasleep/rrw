@@ -53,6 +53,10 @@ class Npc < Character
     end
   end
 
+  def space
+    Space.where(:id => space_id).first
+  end
+
   def get_damage
     get_model.get_damage
   end

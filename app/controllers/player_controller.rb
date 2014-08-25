@@ -34,6 +34,9 @@ class PlayerController < ApplicationController
       PlayerItem.create(:item_type => item_type, :player => @player, :quantity => 1, :equipped => true).save()
     end
 
+    # add a entered world message
+    Chat.new(:space => @player.space, :player => @player, :text => "entered the world", :is_new_player => true).save()
+
     # save to session
     session[:player_id] = @player.id
 

@@ -23,6 +23,8 @@
         clone.find(".text").text(chat.render_text)
         clone.addClass("is-entering") if chat.is_entering
         clone.addClass("is-leaving") if chat.is_leaving
+        clone.addClass("is-death") if chat.is_death
+        clone.addClass("is-new-player") if chat.is_new_player
         $(".chat").append(clone)
         clone.show()
 
