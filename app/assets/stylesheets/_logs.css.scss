@@ -5,7 +5,7 @@
 
   margin-top: 15px;
 
-  .combat-log, .error-log {
+  .combat-log, .error-log, .chat {
     margin-left: auto;
     margin-right: auto;
     border-radius: 15px;
@@ -34,6 +34,32 @@
 
   .error-log {
     background: #F6A386;
+  }
+
+  .chat-log {
+    background: #CBD3DD;
+    font-size: 90%;
+
+    .time {
+      font-size: 75%;
+      color: #666;
+      &:before {
+        content: "[";
+      }
+      &:after {
+        content: "]";
+      }
+      &, &:before, &:after {
+      }
+    }
+
+    li {
+      &.is-entering, &.is-leaving {
+        .text {
+          font-style: italic;
+        }
+      }
+    }
   }
 }
 

@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821054902) do
+ActiveRecord::Schema.define(version: 20140825042501) do
+
+  create_table "chats", force: true do |t|
+    t.integer  "player_id"
+    t.string   "text"
+    t.integer  "space_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "is_entering"
+    t.boolean  "is_leaving"
+  end
+
+  add_index "chats", ["is_entering"], name: "index_chats_on_is_entering"
+  add_index "chats", ["is_leaving"], name: "index_chats_on_is_leaving"
+  add_index "chats", ["player_id"], name: "index_chats_on_player_id"
+  add_index "chats", ["space_id"], name: "index_chats_on_space_id"
 
   create_table "connections", force: true do |t|
     t.string   "name"

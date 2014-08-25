@@ -49,6 +49,28 @@ class WorldController < ApplicationController
     current_player.save()
   end
 
+  def chat
+    return unless player_is_valid?
+
+    @chat = Chat.where(:space_id => current_player.space_id).order(created_at: :desc).limit(20)
+    @result = []
+    @chat.each do |c|
+      @result.push({
+        :id => c.id,
+        :is_entering => c.is_entering,
+        :is_leaving => c.is_leaving,
+        :text => c.text,
+        :player_id => c.player_id,
+        :created_at => c.created_at,
+        :render_text => c.render_text,
+      })
+    end
+
+    respond_to do |format|
+      format.json { render json: @result }
+    end
+  end
+
   def travel
     return unless player_is_valid?
 
@@ -59,6 +81,11 @@ class WorldController < ApplicationController
         current_player.space_id = c.first.to_id
         current_player.update_score()
         current_player.save()
+
+        # add 'entered' and 'left' chats
+        Chat.new(:space => space, :player => current_player, :text => "left " + space.name, :is_leaving => true).save()
+        Chat.new(:space => c.first.to, :player => current_player, :text => "entered " + c.first.to.name, :is_entering => true).save()
+
         return redirect_to "/world/index"
       end
     end
