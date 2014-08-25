@@ -47,15 +47,17 @@ class WorldController < ApplicationController
     current_player.updated_at = Time.now
     current_player.update_score()
     current_player.save()
+
+    @chat = get_chat
   end
 
-  def chat
-    return unless player_is_valid?
+  def get_chat
+    return [] unless player_is_valid?
 
-    @chat = Chat.where(:space_id => current_player.space_id).order(created_at: :desc).limit(20)
-    @result = []
-    @chat.each do |c|
-      @result.push({
+    chat = Chat.where(:space_id => current_player.space_id).order(created_at: :desc).limit(20)
+    result = []
+    chat.each do |c|
+      result.push({
         :id => c.id,
         :is_entering => c.is_entering,
         :is_leaving => c.is_leaving,
@@ -63,8 +65,15 @@ class WorldController < ApplicationController
         :player_id => c.player_id,
         :created_at => c.created_at,
         :render_text => c.render_text,
+        :render_time => c.render_time,
       })
     end
+
+    return result
+  end
+
+  def chat
+    @result = get_chat
 
     respond_to do |format|
       format.json { render json: @result }

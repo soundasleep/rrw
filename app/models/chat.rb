@@ -5,4 +5,8 @@ class Chat < ActiveRecord::Base
   def render_text
     Player.where(:id => player_id).first.name + " " + text
   end
+
+  def render_time
+    (created_at + Time.zone_offset(Time.now.strftime("%z"))).strftime("%H:%M")
+  end
 end

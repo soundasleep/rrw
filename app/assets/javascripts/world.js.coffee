@@ -2,11 +2,17 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-# Yay, Turbolinks!
-$(document).on 'page:change', ->
-  $.ajax
-    url: "/world/chat.json"
-    success: (json, status, xhr) ->
+@App =
+  Chat:
+    update: ->
+      return if $(".chat").length == 0
+
+      $.ajax
+        url: "/world/chat.json"
+        success: (json, status, xhr) ->
+          App.Chat.render(json)
+
+    render: (json) ->
       $(".chat").empty()
 
       $(json).each (index, chat) ->
@@ -15,8 +21,17 @@ $(document).on 'page:change', ->
         clone.find(".time").text(moment(chat.created_at).format("HH:mm"))
         clone.find(".time").attr("title", chat.created_at)
         clone.find(".text").text(chat.render_text)
-        # clone.text(chat.render_text)
         clone.addClass("is-entering") if chat.is_entering
         clone.addClass("is-leaving") if chat.is_leaving
         $(".chat").append(clone)
         clone.show()
+
+$(document).on 'ready', ->
+  App.Chat.update()
+  window.setInterval(App.Chat.update, 10 * 1000)
+  $(".chat").click ->
+    App.Chat.update()
+
+# yay turbolinks
+$(document).on 'page:change', ->
+  App.Chat.update()

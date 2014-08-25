@@ -15,6 +15,12 @@
       - clear_combat_log
 
 %ul.chat.chat-log
+  - if @chat
+    - @chat.each do |chat|
+      %li.chat-template{ :class => (if chat[:is_entering] then "is-entering" else "" end) + (if chat[:is_leaving] then "is-leaving" else "" end) }
+        %span.time #{chat[:render_time]}
+        %span.text #{chat[:render_text]}
+
 %li.chat-template{ :style => "display: none;" }
   %span.time 00:00
   %span.text Loading...

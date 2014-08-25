@@ -59,6 +59,12 @@
           font-style: italic;
         }
       }
+      &.is-entering {
+        color: $blue;
+      }
+      &.is-leaving {
+        color: #999;
+      }
     }
   }
 }
