@@ -66,6 +66,25 @@
         color: #999;
       }
     }
+
+    .say-something {
+      margin: 10px;
+
+      input[type=text] {
+        width: 75%;
+      }
+
+      input[type=submit], button {
+        width: 20%;
+        float: right;
+        margin-top: 3px;
+        padding: 0.5em 0.25em;
+      }
+
+      input, button {
+        display: inline-block;
+      }
+    }
   }
 }
 

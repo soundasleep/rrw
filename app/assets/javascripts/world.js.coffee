@@ -8,7 +8,7 @@
       return if $(".chat").length == 0
 
       $.ajax
-        url: "/world/chat.json"
+        url: "/world/chat.json?since=" + new Date().valueOf()
         success: (json, status, xhr) ->
           App.Chat.render(json)
 

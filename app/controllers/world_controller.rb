@@ -54,7 +54,7 @@ class WorldController < ApplicationController
   def get_chat
     return [] unless player_is_valid?
 
-    chat = Chat.where(:space_id => current_player.space_id).order(created_at: :desc).limit(20)
+    chat = Chat.where(:space_id => current_player.space_id).where.not(:text => nil).order(created_at: :desc).limit(20)
     result = []
     chat.each do |c|
       result.push({
@@ -78,6 +78,18 @@ class WorldController < ApplicationController
     respond_to do |format|
       format.json { render json: @result }
     end
+  end
+
+  def say
+    return [] unless player_is_valid?
+
+    if params[:text]
+      Chat.new(:space_id => current_player.space_id, :player => current_player, :text => params[:text]).save()
+      return redirect_to("/world/index")
+    end
+
+    add_error "No valid text specified"
+    redirect_to "/world/index"
   end
 
   def travel

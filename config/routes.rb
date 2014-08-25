@@ -8,6 +8,7 @@ Rrw::Application.routes.draw do
   post "world/equip"
   post "world/unequip"
   get "world/chat"
+  post "world/say"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
