@@ -15,6 +15,8 @@ class ItemType < ActiveRecord::Base
         return ItemType_Abstract.new()
       when "bed"
         return ItemType_Abstract.new()
+      when "town_portal"
+        return ItemType_TownPortal.new()
       else
         raise ArgumentError, "Unknown item type #{self.item_type}"
     end
@@ -105,5 +107,24 @@ class ItemType_Sword < ItemType_Weapon
 
   def get_damage_string
     "1d8"
+  end
+end
+
+class ItemType_TownPortal < ItemType_Abstract
+  def can_use?
+    true
+  end
+
+  def use(context, item_type)
+    home_space = Space.where(:name => "Home")
+    if home_space.length > 0
+      # add 'entered' and 'left' chats
+      Chat.new(:space => context.current_player.space, :player => context.current_player, :text => "transported out of " + context.current_player.space.name, :is_leaving => true).save()
+      Chat.new(:space => home_space.first, :player => context.current_player, :text => "transported to " + home_space.first.name, :is_entering => true).save()
+
+      context.current_player.space_id = home_space.first.id
+      context.add_combat_log "Used #{item_type.name}"
+      context.current_player.save()
+    end
   end
 end

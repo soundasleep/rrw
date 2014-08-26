@@ -6,8 +6,9 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 spaces = {
-  :home => Space.create(:name => "Home", :description => "The home location"),
+  :home => Space.create(:name => "Home", :description => "Your home village"),
   :inn => Space.create(:name => "Inn", :description => "The village inn"),
+  :wizard => Space.create(:name => "Wizard den", :description => "A rustic house filled with charms and potions"),
   :forest => Space.create(:name => "Dark forest", :description => "A dark and scary forest, filled with critters"),
   :dusty_cave => Space.create(:name => "Dusty cave", :description => "A dark and dusty cave in the cliffside, delving deep underground"),
   :mountain_pass => Space.create(:name => "Mountain pass", :description => "A cold and dusty mountain pass, with only brief glimpses of the forest below"),
@@ -24,8 +25,9 @@ def connect(spaces, from, to, to_label, from_label)
 end
 
 connections = {
-  :home_inn => connect(spaces, :home, :inn, "to the inn", "back home"),
-  :home_forest => connect(spaces, :home, :forest, "into the forest", "back home"),
+  :home_inn => connect(spaces, :home, :inn, "to the inn", "back into town"),
+  :home_wizrd => connect(spaces, :home, :wizard, "to the wizard den", "back into town"),
+  :home_forest => connect(spaces, :home, :forest, "into the forest", "back into town"),
   :forest_dusty_cave => connect(spaces, :forest, :dusty_cave, "into the cave", "out into the forest"),
   :forest_mountain_pass => connect(spaces, :forest, :mountain_pass, "through the mountain pass", "back into the forest"),
   :mountain_pass_mountain_peak => connect(spaces, :mountain_pass, :mountain_peak, "up into the mountains", "down into the forest"),
@@ -34,11 +36,15 @@ connections = {
 npcs = {
   # TODO fix the model so we can use :space => rather than :space_id =>
   :inn => {
-    :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 50, :total_health => 50, :level => 20, :respawns => 60, :space_id => spaces[:inn].id, :character_type => "innkeeper", :can_sell => true, :can_buy => true),
+    :innkeeper => Npc.create(:name => "Innkeeper", :friendly => true, :current_health => 100, :total_health => 100, :level => 20, :respawns => 60, :space_id => spaces[:inn].id, :character_type => "innkeeper", :can_sell => true, :can_buy => true),
     :innkeeper_mouse1 => Npc.create(:name => "Mouse 1", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
     :innkeeper_mouse2 => Npc.create(:name => "Mouse 2", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
     :innkeeper_mouse3 => Npc.create(:name => "Mouse 3", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
     :innkeeper_mouse4 => Npc.create(:name => "Mouse 4", :friendly => false, :current_health => 3, :total_health => 3, :level => 1, :respawns => 5, :space_id => spaces[:inn].id, :character_type => "mouse"),
+  },
+
+  :wizard => {
+    :wizard => Npc.create(:name => "Wizard", :friendly => true, :current_health => 100, :total_health => 100, :level => 20, :respawns => 60, :space_id => spaces[:wizard].id, :character_type => "wizard", :can_sell => true, :can_buy => true),
   },
 
   :forest => {
@@ -68,12 +74,19 @@ items = {
   :dagger => ItemType.create(:name => "Dagger", :item_type => "dagger", :description => "A blunt weapon for stabbing things", :base_cost => 20),
   :sword => ItemType.create(:name => "Sword", :item_type => "sword", :description => "A sharp weapon for slicing things", :base_cost => 60),
   :sapphire => ItemType.create(:name => "Sapphire", :item_type => "sapphire", :description => "A shiny sapphire gem that's probably worth a lot", :base_cost => 200),
-  :bed => ItemType.create(:name => "Bed", :item_type => "bed", :description => "A safe space to sleep in for the night", :base_cost => 5)
+  :bed => ItemType.create(:name => "Bed", :item_type => "bed", :description => "A safe space to sleep in for the night", :base_cost => 5),
+  :town_portal => ItemType.create(:name => "Scroll of Town Portal", :item_type => "town_portal", :description => "An ancient coded scroll to return you back home", :base_cost => 30),
 }
 
-NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1.34)
-NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:bed], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1.2)
+NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 1, :max_quantity => 1, :respawns => 60, :multiplier => 1.34)
+NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:bed], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1)
 
-items.each do |key, value|
+NpcSells.create(:npc => npcs[:wizard][:wizard], :item_type => items[:health_potion], :current_quantity => 3, :max_quantity => 3, :respawns => 60, :multiplier => 1.25)
+NpcSells.create(:npc => npcs[:wizard][:wizard], :item_type => items[:town_portal], :current_quantity => 2, :max_quantity => 2, :respawns => 120, :multiplier => 1.25)
+
+[items[:health_potion], items[:dagger], items[:sword]].each do |value|
   NpcBuys.create(:npc => npcs[:inn][:innkeeper], :item_type => value, :multiplier => 0.67)
+end
+[items[:health_potion], items[:sapphire], items[:town_portal]].each do |value|
+  NpcBuys.create(:npc => npcs[:wizard][:wizard], :item_type => value, :multiplier => 0.75)
 end
