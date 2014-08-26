@@ -16,6 +16,8 @@
 @import "bitters";
 @import "neat";
 
+$mobile: new-breakpoint(max-width 640px);
+
 @import "globals";
 
 @import "navigation";
