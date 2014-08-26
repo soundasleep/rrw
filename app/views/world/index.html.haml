@@ -46,7 +46,8 @@
     - current_player.space.connections.each do |c|
       = form_tag("/world/travel", method: "post") do
         = hidden_field_tag(:connection, c.id)
-        = submit_tag("Go #{c.name}")
+        = button_tag(:disabled => (c.requires_death and c.requires_death.current_health > 0)) do
+          Go #{c.name}
 
     = form_tag("/world/index", method: "get") do
       = submit_tag("Look around again")

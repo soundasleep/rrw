@@ -29,7 +29,7 @@ class PlayerController < ApplicationController
     @player.save()
 
     # give the player an item
-    item_type = ItemType.where(:item_type => "sword").first
+    item_type = ItemType.where(:item_type => "dagger").first
     if item_type
       PlayerItem.create(:item_type => item_type, :player => @player, :quantity => 1, :equipped => true).save()
     end

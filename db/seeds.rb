@@ -10,20 +10,26 @@ spaces = {
   :inn => Space.create(:name => "Inn", :description => "The village inn"),
   :forest => Space.create(:name => "Dark forest", :description => "A dark and scary forest, filled with critters"),
   :dusty_cave => Space.create(:name => "Dusty cave", :description => "A dark and dusty cave in the cliffside, delving deep underground"),
+  :mountain_pass => Space.create(:name => "Mountain pass", :description => "A cold and dusty mountain pass, with only brief glimpses of the forest below"),
   :mountain_peak => Space.create(:name => "Mountain peak", :description => "A cold and icy mountain peak, unforgiving in its unforgivingness"),
 }
 
 # create a bidirectional connection
 def connect(spaces, from, to, to_label, from_label)
   # TODO fix the model so we can use :from => rather than :from_id =>
-  Connection.create(:name => to_label, :from_id => spaces[from].id, :to_id => spaces[to].id)
-  Connection.create(:name => from_label, :from_id => spaces[to].id, :to_id => spaces[from].id)
+  return {
+    :to => Connection.create(:name => to_label, :from_id => spaces[from].id, :to_id => spaces[to].id),
+    :from => Connection.create(:name => from_label, :from_id => spaces[to].id, :to_id => spaces[from].id),
+  }
 end
 
-connect(spaces, :home, :inn, "to the inn", "back home")
-connect(spaces, :home, :forest, "into the forest", "back home")
-connect(spaces, :forest, :dusty_cave, "into the cave", "out into the forest")
-connect(spaces, :forest, :mountain_peak, "up into the mountains", "down into the forest")
+connections = {
+  :home_inn => connect(spaces, :home, :inn, "to the inn", "back home"),
+  :home_forest => connect(spaces, :home, :forest, "into the forest", "back home"),
+  :forest_dusty_cave => connect(spaces, :forest, :dusty_cave, "into the cave", "out into the forest"),
+  :forest_mountain_pass => connect(spaces, :forest, :mountain_pass, "through the mountain pass", "back into the forest"),
+  :mountain_pass_mountain_peak => connect(spaces, :mountain_pass, :mountain_peak, "up into the mountains", "down into the forest"),
+}
 
 npcs = {
   # TODO fix the model so we can use :space => rather than :space_id =>
@@ -44,10 +50,18 @@ npcs = {
     :lizard => Npc.create(:name => "Red lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 45, :space_id => spaces[:dusty_cave].id, :character_type => "lizard"),
   },
 
+  :mountain_pass => {
+    :black_lizard => Npc.create(:name => "Black lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 45, :space_id => spaces[:mountain_pass].id, :character_type => "lizard"),
+  },
+
   :mountain_peak => {
     :ice_dragon => Npc.create(:name => "Ice dragon", :friendly => false, :current_health => 50, :total_health => 50, :level => 5, :respawns => 120, :space_id => spaces[:mountain_peak].id, :character_type => "ice_dragon"),
   },
 }
+
+# set up blocking connections
+connections[:mountain_pass_mountain_peak][:to].requires_death_id = npcs[:mountain_pass][:black_lizard].id
+connections[:mountain_pass_mountain_peak][:to].save()
 
 items = {
   :health_potion => ItemType.create(:name => "Health potion", :item_type => "potion_health", :description => "A potion that restores 10 health", :base_cost => 10),
