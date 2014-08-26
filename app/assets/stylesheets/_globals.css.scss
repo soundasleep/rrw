@@ -38,3 +38,10 @@ a.github {
   padding-left: (16px + 4px);
   min-height: 16px;
 }
+
+button, input[type=submit], input[type=reset] {
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

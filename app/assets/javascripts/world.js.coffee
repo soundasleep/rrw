@@ -39,5 +39,6 @@ $(document).on 'page:change', ->
   App.Chat.update()
 
 $(document).on 'page:change', ->
-  $("button, input[type=submit], input[type=reset]").click (e) ->
-    $(e.target).prop('disabled', true)
+  $("form").unbind('submit').on 'submit', (e) ->
+    $(e.target).find("input, button[type=submit], button[type=reset]").addClass('disabled')
+    return true
