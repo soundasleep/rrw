@@ -158,12 +158,22 @@ class WorldController < ApplicationController
           if npc_sell.current_quantity > 0
             npc_sell.current_quantity -= 1
             current_player.gold -= npc_sell.cost
-            add_item current_player, npc_sell.item_type
-            npc_sell.save()
-            current_player.update_score()
-            current_player.save()
-            add_combat_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.cost}g"
-            return redirect_to "/world/index"
+
+            # if a bed, we use it instantly
+            if npc_sell.item_type.item_type == "bed"
+              current_player.current_health = current_player.total_health
+              current_player.update_score()
+              current_player.save()
+              add_combat_log "You slept in a bed for #{npc_sell.cost}g, restoring your health to #{current_player.current_health}/#{current_player.total_health}"
+              return redirect_to "/world/index"
+            else
+              add_item current_player, npc_sell.item_type
+              npc_sell.save()
+              current_player.update_score()
+              current_player.save()
+              add_combat_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.cost}g"
+              return redirect_to "/world/index"
+            end
           else
             add_error "That NPC does not have any of those to sell to you"
             return redirect_to "/world/index"

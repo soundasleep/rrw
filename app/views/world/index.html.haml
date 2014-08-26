@@ -66,7 +66,10 @@
           = form_tag("/world/buy", method: "post") do
             = hidden_field_tag(:npc_sells, npc_sell.id)
             = button_tag(:disabled => current_player.gold < npc_sell.cost) do
-              Buy one #{npc_sell.item_type.name} from #{p.name} for #{npc_sell.cost}g
+              - if npc_sell.item_type.item_type == "bed"
+                Sleep in a bed for #{npc_sell.cost}g
+              - else
+                Buy one #{npc_sell.item_type.name} from #{p.name} for #{npc_sell.cost}g
 
     - if nearby_npcs_buying(current_player).length > 0
       %h2 Sell

@@ -51,11 +51,11 @@ npcs = {
   },
 
   :mountain_pass => {
-    :black_lizard => Npc.create(:name => "Black lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 45, :space_id => spaces[:mountain_pass].id, :character_type => "lizard"),
+    :black_lizard => Npc.create(:name => "Black lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 120, :space_id => spaces[:mountain_pass].id, :character_type => "lizard"),
   },
 
   :mountain_peak => {
-    :ice_dragon => Npc.create(:name => "Ice dragon", :friendly => false, :current_health => 50, :total_health => 50, :level => 5, :respawns => 120, :space_id => spaces[:mountain_peak].id, :character_type => "ice_dragon"),
+    :ice_dragon => Npc.create(:name => "Ice dragon", :friendly => false, :current_health => 60, :total_health => 60, :level => 5, :respawns => 120, :space_id => spaces[:mountain_peak].id, :character_type => "ice_dragon"),
   },
 }
 
@@ -68,9 +68,11 @@ items = {
   :dagger => ItemType.create(:name => "Dagger", :item_type => "dagger", :description => "A blunt weapon for stabbing things", :base_cost => 20),
   :sword => ItemType.create(:name => "Sword", :item_type => "sword", :description => "A sharp weapon for slicing things", :base_cost => 60),
   :sapphire => ItemType.create(:name => "Sapphire", :item_type => "sapphire", :description => "A shiny sapphire gem that's probably worth a lot", :base_cost => 200),
+  :bed => ItemType.create(:name => "Bed", :item_type => "bed", :description => "A safe space to sleep in for the night", :base_cost => 5)
 }
 
 NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1.34)
+NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:bed], :current_quantity => 5, :max_quantity => 5, :respawns => 60, :multiplier => 1.2)
 
 items.each do |key, value|
   NpcBuys.create(:npc => npcs[:inn][:innkeeper], :item_type => value, :multiplier => 0.67)
