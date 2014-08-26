@@ -8,6 +8,10 @@
       = Rails.env
 
     %li.git
-      Running
-      %a{ :href => "https://github.com/soundasleep/rrw/commit/#{ENV['GIT_SHA']} "}
-        = ENV['GIT_SHA'][0..7]
+      - if ENV['GIT_SHA']
+        Running
+        %a{ :href => "https://github.com/soundasleep/rrw/commit/#{ENV['GIT_SHA']} "}
+          = ENV['GIT_SHA'][0..7]
+      - if ENV['GIT_DATE']
+        %span{ :title => ENV['GIT_DATE'] }
+          (#{time_ago_in_words(DateTime.parse ENV['GIT_DATE'])})
