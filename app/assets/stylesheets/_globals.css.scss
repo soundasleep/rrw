@@ -32,3 +32,9 @@ html {
     margin: 0 auto;
   }
 }
+
+a.github {
+  background: image-url('GitHub-Mark-16px.png') top left no-repeat;
+  padding-left: (16px + 4px);
+  min-height: 16px;
+}

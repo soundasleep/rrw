@@ -24,3 +24,28 @@
     content: ' - ';
   }
 }
+
+.content {
+  @include span-columns(12);
+  margin-bottom: 15px;
+
+  .yield {
+    @include span-columns(8);
+
+    .character-sheet {
+      @include span-columns(5);
+    }
+    .inventory {
+      @include span-columns(7);
+    }
+    .world {
+      @include span-columns(7);
+    }
+    .actions {
+      @include span-columns(5);
+    }
+  }
+  .logs {
+    @include span-columns(4);
+  }
+}

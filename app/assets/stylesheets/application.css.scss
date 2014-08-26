@@ -19,10 +19,13 @@
 @import "globals";
 
 @import "navigation";
+@import "footer";
 @import "logs";
+
 @import "player";
 @import "world";
 @import "scores";
+@import "sessions";
 
 body {
   @include outer-container;

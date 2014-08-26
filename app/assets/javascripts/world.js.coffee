@@ -5,7 +5,7 @@
 @App =
   Chat:
     update: ->
-      return if $(".chat").length == 0
+      return if $(".chat").length == 0 or !$(".chat").is(":visible")
 
       $.ajax
         url: "/world/chat.json?since=" + new Date().valueOf()

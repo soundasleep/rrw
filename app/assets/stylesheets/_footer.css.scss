@@ -1,0 +1,17 @@
+.footer {
+  clear: both;
+
+  max-width: 60%;
+  background: darken(white, 10%);
+  border: 1px solid darken(white, 15%);
+  font-size: 80%;
+  text-align: center;
+  color: darken(white, 50%);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 15px auto;
+
+  .environment {
+    display: none;
+  }
+}

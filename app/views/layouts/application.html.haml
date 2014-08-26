@@ -12,7 +12,10 @@
       = render "navigation"
 
     .content
-      = yield
+      .yield
+        = yield
+      .logs
+        = render "logs"
 
-    .logs
-      = render "logs"
+    .footer
+      = render "footer"

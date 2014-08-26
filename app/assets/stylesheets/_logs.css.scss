@@ -1,8 +1,6 @@
 /* styling combat logs and errors */
 
 .logs {
-  @include span-columns(3);
-
   margin-top: 15px;
 
   .combat-log, .error-log {
@@ -99,16 +97,3 @@
     }
   }
 }
-
-.content {
-  @include span-columns(9);
-
-  .world {
-    @include span-columns(7);
-  }
-  .actions {
-    @include span-columns(5);
-  }
-
-}
-
