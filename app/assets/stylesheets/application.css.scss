@@ -19,6 +19,7 @@
 $mobile: new-breakpoint(max-width 640px);
 
 @import "globals";
+@import "layout";
 
 @import "navigation";
 @import "footer";
