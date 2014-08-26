@@ -7,6 +7,8 @@ class Npc < Character
     case self.character_type
       when "innkeeper"
         return Npc_Innkeeper.new()
+      when "wizard"
+        return Npc_Wizard.new()
       when "mouse"
         return Npc_Mouse.new()
       when "spider"
@@ -77,9 +79,23 @@ class Npc_Abstract
   def get_drops
     []
   end
+
+  # Roll a 1d100 and return true if the result is less than the given argument.
+  def chance(f)
+    return Random.rand(f * 100) < f
+  end
 end
 
 class Npc_Innkeeper < Npc_Abstract
+  def get_damage
+    1 + Random.rand(30)
+  end
+  def get_damage_string
+    "1d30"
+  end
+end
+
+class Npc_Wizard < Npc_Abstract
   def get_damage
     1 + Random.rand(30)
   end
@@ -98,7 +114,7 @@ class Npc_Mouse < Npc_Abstract
 
   def get_drops
     drops = []
-    if Random.rand(4) < 1
+    if chance(20)
       drops.push ItemType.where(:item_type => "dagger").first()
     end
     return drops
@@ -115,7 +131,7 @@ class Npc_Spider < Npc_Abstract
 
   def get_drops
     drops = []
-    if Random.rand(2) < 1
+    if chance(50)
       drops.push ItemType.where(:item_type => "dagger").first()
     end
     return drops
@@ -133,7 +149,12 @@ class Npc_Lizard < Npc_Abstract
 
   def get_drops
     drops = []
-    drops.push ItemType.where(:item_type => "sword").first()
+    if chance(80)
+      drops.push ItemType.where(:item_type => "sword").first()
+    end
+    if chance(10)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
     return drops
   end
 end
@@ -148,7 +169,12 @@ class Npc_IceDragon < Npc_Abstract
 
   def get_drops
     drops = []
-    drops.push ItemType.where(:item_type => "sapphire").first()
+    if chance(95)
+      drops.push ItemType.where(:item_type => "sapphire").first()
+    end
+    if chance(20)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
     return drops
   end
 end
