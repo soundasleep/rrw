@@ -37,3 +37,7 @@ $(document).on 'ready', ->
 # yay turbolinks
 $(document).on 'page:change', ->
   App.Chat.update()
+
+$(document).on 'page:change', ->
+  $("button, input[type=submit], input[type=reset]").click (e) ->
+    $(e.target).prop('disabled', true)
