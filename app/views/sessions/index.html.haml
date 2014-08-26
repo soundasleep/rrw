@@ -1,7 +1,8 @@
 %h1 Login required
 
 %p
-  = link_to "Sign in with Google", "/auth/google_login"
+  = form_tag("/auth/google_login", method: "get") do
+    = submit_tag("Sign in with Google")
 
 %p
   More options coming soon...
