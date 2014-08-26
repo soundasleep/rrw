@@ -12,7 +12,9 @@ class ItemType < ActiveRecord::Base
       when "sword"
         return ItemType_Sword.new()
       when "sapphire"
-        return ItemType_Sapphire.new()
+        return ItemType_Abstract.new()
+      when "bed"
+        return ItemType_Abstract.new()
       else
         raise ArgumentError, "Unknown item type #{self.item_type}"
     end
@@ -104,7 +106,4 @@ class ItemType_Sword < ItemType_Weapon
   def get_damage_string
     "1d8"
   end
-end
-
-class ItemType_Sapphire < ItemType_Abstract
 end
