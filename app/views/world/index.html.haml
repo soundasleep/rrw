@@ -13,7 +13,10 @@
         = current_player.space.description
 
     %p
-      There are #{nearby_players.length} people here:
+      - if nearby_players.length == 1
+        There is #{nearby_players.length} person here:
+      - else
+        There are #{nearby_players.length} people here:
       %ul.nearby-players
         - nearby_players.each do |p|
           %li
@@ -24,7 +27,10 @@
             (level #{p.level}, #{p.current_health}/#{p.total_health} health)
 
     - if nearby_npcs.length > 0
-      %p There are #{nearby_npcs.length} NPCs here:
+      - if nearby_npcs.length == 1
+        %p There is #{nearby_npcs.length} NPC here:
+      - else
+        %p There are #{nearby_npcs.length} NPCs here:
       %ul.nearby-npcs
         - nearby_npcs.each do |p|
           %li
