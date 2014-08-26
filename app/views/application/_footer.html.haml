@@ -1,5 +1,13 @@
 .copyright
-  Contribute at
-  %a.github{ :href => "https://github.com/soundasleep/rrw" } rrw
+  %ul
+    %li.contribute
+      Contribute at
+      %a.github{ :href => "https://github.com/soundasleep/rrw" } rrw
 
-  %span.environment= Rails.env
+    %li.environment
+      = Rails.env
+
+    %li.git
+      Running
+      %a{ :href => "https://github.com/soundasleep/rrw/commit/#{ENV['GIT_SHA']} "}
+        = ENV['GIT_SHA'][0..7]
