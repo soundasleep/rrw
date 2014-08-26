@@ -6,7 +6,7 @@
       = link_to "Start game", controller: 'world'
 
   - if current_player
-    %li.stats
+    %li.stats.extra
       = link_to current_player.name, controller: 'player'
       (level #{current_player.level})
       #{current_player.current_health}/#{current_player.total_health} health, #{current_player.gold}g
@@ -16,7 +16,7 @@
 
   %li.score
     - if current_player
-      Score: #{current_player.score}
+      %span.extra Score: #{current_player.score}
     = link_to "High scores", controller: 'scores'
 
   - if current_user

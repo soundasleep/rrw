@@ -23,6 +23,12 @@
   li + li:before {
     content: ' - ';
   }
+
+  @include media($mobile) {
+    .extra {
+      display: none;
+    }
+  }
 }
 
 .content {
