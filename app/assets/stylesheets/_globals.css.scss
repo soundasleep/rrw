@@ -45,3 +45,12 @@ button, input[type=submit], input[type=reset] {
     cursor: not-allowed;
   }
 }
+
+@include media($mobile) {
+  body {
+    font-size: 90%;
+  }
+  html {
+    margin: 5px;
+  }
+}
