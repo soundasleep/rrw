@@ -91,10 +91,13 @@ connections[:dusty_cave_3][:to].save()
 items = {
   :health_potion => ItemType.create(:name => "Health potion", :item_type => "potion_health", :description => "A potion that restores 10 health", :base_cost => 10),
   :dagger => ItemType.create(:name => "Dagger", :item_type => "dagger", :description => "A blunt weapon for stabbing things", :base_cost => 20),
-  :sword => ItemType.create(:name => "Sword", :item_type => "sword", :description => "A sharp weapon for slicing things", :base_cost => 60),
+  :sword => ItemType.create(:name => "Sword", :item_type => "sword", :description => "A sharp weapon for slicing things", :base_cost => 30),
+  :katana => ItemType.create(:name => "Katana", :item_type => "katana", :description => "A curved, slender weapon for slicing things", :base_cost => 60),
   :sapphire => ItemType.create(:name => "Sapphire", :item_type => "sapphire", :description => "A shiny sapphire gem that's probably worth a lot", :base_cost => 200),
   :bed => ItemType.create(:name => "Bed", :item_type => "bed", :description => "A safe space to sleep in for the night", :base_cost => 5),
   :town_portal => ItemType.create(:name => "Scroll of Town Portal", :item_type => "town_portal", :description => "An ancient coded scroll to return you back home", :base_cost => 30),
+  :scroll_fireball => ItemType.create(:name => "Scroll of Fireball", :item_type => "scroll_fireball", :description => "A one-use ancient coded scroll to destroy your enemies with flame", :base_cost => 40),
+  :scroll_lightning => ItemType.create(:name => "Scroll of Lightning", :item_type => "scroll_lightning", :description => "A one-use ancient coded scroll to destroy your enemies with lightning", :base_cost => 100),
 }
 
 NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:health_potion], :current_quantity => 1, :max_quantity => 1, :respawns => 60, :multiplier => 1.34)
@@ -102,10 +105,11 @@ NpcSells.create(:npc => npcs[:inn][:innkeeper], :item_type => items[:bed], :curr
 
 NpcSells.create(:npc => npcs[:wizard][:wizard], :item_type => items[:health_potion], :current_quantity => 3, :max_quantity => 3, :respawns => 60, :multiplier => 1.25)
 NpcSells.create(:npc => npcs[:wizard][:wizard], :item_type => items[:town_portal], :current_quantity => 2, :max_quantity => 2, :respawns => 120, :multiplier => 1.25)
+NpcSells.create(:npc => npcs[:wizard][:wizard], :item_type => items[:scroll_fireball], :current_quantity => 1, :max_quantity => 1, :respawns => 120, :multiplier => 1.25)
 
-[items[:health_potion], items[:dagger], items[:sword]].each do |value|
+[items[:health_potion], items[:dagger], items[:sword], items[:katana]].each do |value|
   NpcBuys.create(:npc => npcs[:inn][:innkeeper], :item_type => value, :multiplier => 0.67)
 end
-[items[:health_potion], items[:sapphire], items[:town_portal]].each do |value|
+[items[:health_potion], items[:sapphire], items[:town_portal], items[:scroll_fireball], items[:scroll_lightning]].each do |value|
   NpcBuys.create(:npc => npcs[:wizard][:wizard], :item_type => value, :multiplier => 0.75)
 end

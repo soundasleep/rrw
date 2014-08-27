@@ -161,7 +161,7 @@ class Npc_Lizard < Npc_Abstract
   end
 end
 
-class Npc_IceDragon < Npc_Abstract
+class Npc_BlackDragon < Npc_Abstract
   def get_damage
     1 + Random.rand(8)
   end
@@ -177,11 +177,14 @@ class Npc_IceDragon < Npc_Abstract
     if chance(30)
       drops.push ItemType.where(:item_type => "town_portal").first()
     end
+    if chance(10)
+      drops.push ItemType.where(:item_type => "katana").first()
+    end
     return drops
   end
 end
 
-class Npc_BlackDragon < Npc_Abstract
+class Npc_IceDragon < Npc_Abstract
   def get_damage
     (1 + Random.rand(6)) + (1 + Random.rand(6))
   end
@@ -196,6 +199,9 @@ class Npc_BlackDragon < Npc_Abstract
     end
     if chance(20)
       drops.push ItemType.where(:item_type => "town_portal").first()
+    end
+    if chance(20)
+      drops.push ItemType.where(:item_type => "katana").first()
     end
     return drops
   end

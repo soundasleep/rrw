@@ -17,6 +17,10 @@ class ItemType < ActiveRecord::Base
         return ItemType_Abstract.new()
       when "town_portal"
         return ItemType_TownPortal.new()
+      when "scroll_fireball"
+        return ItemType_Scroll_Fireball.new()
+      when "scroll_lightning"
+        return ItemType_Scroll_Lightning.new()
       else
         raise ArgumentError, "Unknown item type #{self.item_type}"
     end
@@ -97,6 +101,36 @@ class ItemType_Dagger < ItemType_Weapon
 
   def get_damage_string
     "1d4"
+  end
+end
+
+class ItemType_Sword < ItemType_Weapon
+  def get_damage
+    1 + Random.rand(8)
+  end
+
+  def get_damage_string
+    "1d8"
+  end
+end
+
+class ItemType_Scroll_Fireball < ItemType_Weapon
+  def get_damage
+    (1..5).map( 1 + Random.rand(3) ).sum
+  end
+
+  def get_damage_string
+    "5d3"
+  end
+end
+
+class ItemType_Scroll_Lightning < ItemType_Weapon
+  def get_damage
+    1 + Random.rand(50)
+  end
+
+  def get_damage_string
+    "1d50"
   end
 end
 
