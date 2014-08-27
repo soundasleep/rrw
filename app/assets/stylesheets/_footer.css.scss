@@ -14,9 +14,15 @@
   ul {
     li {
       display: inline-block;
+      @include media($mobile) {
+        display: block;
+      }
 
       & + li:before {
         content: ' - ';
+        @include media($mobile) {
+          content: ''
+        }
       }
     }
   }
