@@ -17,6 +17,8 @@ class Npc < Character
         return Npc_Lizard.new()
       when "ice_dragon"
         return Npc_IceDragon.new()
+      when "black_dragon"
+        return Npc_BlackDragon.new()
       else
         raise ArgumentError, "Unknown character type #{self.character_type}"
     end
@@ -161,10 +163,30 @@ end
 
 class Npc_IceDragon < Npc_Abstract
   def get_damage
-    1 + Random.rand(10)
+    1 + Random.rand(8)
   end
   def get_damage_string
     "1d10"
+  end
+
+  def get_drops
+    drops = []
+    if chance(35)
+      drops.push ItemType.where(:item_type => "sapphire").first()
+    end
+    if chance(30)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
+    return drops
+  end
+end
+
+class Npc_BlackDragon < Npc_Abstract
+  def get_damage
+    (1 + Random.rand(6)) + (1 + Random.rand(6))
+  end
+  def get_damage_string
+    "2d6"
   end
 
   def get_drops

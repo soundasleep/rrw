@@ -11,6 +11,8 @@ spaces = {
   :wizard => Space.create(:name => "Wizard den", :description => "A rustic house filled with charms and potions"),
   :forest => Space.create(:name => "Dark forest", :description => "A dark and scary forest, filled with critters"),
   :dusty_cave => Space.create(:name => "Dusty cave", :description => "A dark and dusty cave in the cliffside, delving deep underground"),
+  :dusty_cave_2 => Space.create(:name => "Dusty cave Level 2", :description => "The dark caves delves deep underground with only a cool breeze to keep you company"),
+  :dusty_cave_3 => Space.create(:name => "Dusty cave Level 3", :description => "A pitch black, desolate chasm deep underground"),
   :mountain_pass => Space.create(:name => "Mountain pass", :description => "A cold and dusty mountain pass, with only brief glimpses of the forest below"),
   :mountain_peak => Space.create(:name => "Mountain peak", :description => "A cold and icy mountain peak, unforgiving in its unforgivingness"),
 }
@@ -30,6 +32,8 @@ connections = {
   :home_forest => connect(spaces, :home, :forest, "into the forest", "back into town"),
   :forest_dusty_cave => connect(spaces, :forest, :dusty_cave, "into the cave", "out into the forest"),
   :forest_mountain_pass => connect(spaces, :forest, :mountain_pass, "through the mountain pass", "back into the forest"),
+  :dusty_cave_2 => connect(spaces, :dusty_cave, :dusty_cave_2, "deeper into the cave", "back to the first cave level"),
+  :dusty_cave_3 => connect(spaces, :dusty_cave_2, :dusty_cave_3, "deeper into the cave", "back to the second cave level"),
   :mountain_pass_mountain_peak => connect(spaces, :mountain_pass, :mountain_peak, "up into the mountains", "down into the forest"),
 }
 
@@ -53,7 +57,16 @@ npcs = {
   },
 
   :dusty_cave => {
-    :lizard => Npc.create(:name => "Red lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 45, :space_id => spaces[:dusty_cave].id, :character_type => "lizard"),
+    :mouse => Npc.create(:name => "Mouse", :friendly => false, :current_health => 7, :total_health => 7, :level => 3, :respawns => 45, :space_id => spaces[:dusty_cave].id, :character_type => "mouse"),
+  },
+
+  :dusty_cave_2 => {
+    :lizard => Npc.create(:name => "Red lizard", :friendly => false, :current_health => 25, :total_health => 25, :level => 3, :respawns => 45, :space_id => spaces[:dusty_cave_2].id, :character_type => "lizard"),
+    :spider1 => Npc.create(:name => "Black spider", :friendly => false, :current_health => 30, :total_health => 30, :level => 4, :respawns => 60, :space_id => spaces[:dusty_cave_2].id, :character_type => "spider"),
+  },
+
+  :dusty_cave_3 => {
+    :ice_dragon => Npc.create(:name => "Black dragon", :friendly => false, :current_health => 40, :total_health => 40, :level => 5, :respawns => 120, :space_id => spaces[:dusty_cave_3].id, :character_type => "black_dragon"),
   },
 
   :mountain_pass => {
@@ -61,13 +74,19 @@ npcs = {
   },
 
   :mountain_peak => {
-    :ice_dragon => Npc.create(:name => "Ice dragon", :friendly => false, :current_health => 60, :total_health => 60, :level => 5, :respawns => 120, :space_id => spaces[:mountain_peak].id, :character_type => "ice_dragon"),
+    :ice_dragon => Npc.create(:name => "Ice dragon", :friendly => false, :current_health => 60, :total_health => 60, :level => 8, :respawns => 120, :space_id => spaces[:mountain_peak].id, :character_type => "ice_dragon"),
   },
 }
 
 # set up blocking connections
 connections[:mountain_pass_mountain_peak][:to].requires_death_id = npcs[:mountain_pass][:black_lizard].id
 connections[:mountain_pass_mountain_peak][:to].save()
+
+connections[:dusty_cave_2][:to].requires_death_id = npcs[:dusty_cave][:mouse].id
+connections[:dusty_cave_2][:to].save()
+
+connections[:dusty_cave_3][:to].requires_death_id = npcs[:dusty_cave_2][:spider1].id
+connections[:dusty_cave_3][:to].save()
 
 items = {
   :health_potion => ItemType.create(:name => "Health potion", :item_type => "potion_health", :description => "A potion that restores 10 health", :base_cost => 10),
