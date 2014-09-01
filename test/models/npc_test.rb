@@ -13,4 +13,12 @@ class NpcTest < ActiveSupport::TestCase
     end
   end
 
+  test "we have at least one NPC that buys" do
+    assert_not_equal 0, Npc.where(:can_buy => true).length || 0
+  end
+
+  test "we have at least one NPC that sells" do
+    assert_not_equal 0, Npc.where(:can_sell => true).length || 0
+  end
+
 end
