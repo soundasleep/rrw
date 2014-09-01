@@ -53,6 +53,11 @@ class ItemType < ActiveRecord::Base
     true
   end
 
+  # When fighting with this item, is it one-use?
+  def is_one_attack?
+    get_model.is_one_use_weapon?
+  end
+
   # Use this item in some way
   def use(context)
     get_model.use(context, self)
@@ -69,6 +74,10 @@ class ItemType_Abstract
   end
 
   def is_weapon?
+    false
+  end
+
+  def is_one_use_weapon?
     false
   end
 end
@@ -134,6 +143,10 @@ class ItemType_Scroll_Fireball < ItemType_Weapon
   def get_damage_string
     "5d3"
   end
+
+  def is_one_use_weapon?
+    true
+  end
 end
 
 class ItemType_Scroll_Lightning < ItemType_Weapon
@@ -144,15 +157,9 @@ class ItemType_Scroll_Lightning < ItemType_Weapon
   def get_damage_string
     "1d50"
   end
-end
 
-class ItemType_Sword < ItemType_Weapon
-  def get_damage
-    1 + Random.rand(8)
-  end
-
-  def get_damage_string
-    "1d8"
+  def is_one_use_weapon?
+    true
   end
 end
 

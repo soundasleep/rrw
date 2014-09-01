@@ -89,7 +89,7 @@ spaces:
             quantity: 2
             respawns: 120
           scroll_fireball:
-            quantity: 1
+            quantity: 2
             respawns: 120
 
         buys:

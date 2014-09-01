@@ -370,6 +370,17 @@ class WorldController < ApplicationController
           else
             # add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
           end
+
+          # remove one-use weapons?
+          if p1.current_weapon and p1.current_weapon.item_type.is_one_attack?
+            add_combat_log "#{p1.current_weapon.item_type.name} has been used"
+            remove_item(p1, p1.current_weapon.item_type)
+
+            # equip the next weapon, if there are any
+            if weapon = p1.player_items.where(:equipped => false).select { |item| item.item_type.is_weapon? }.first
+              equip_item(weapon)
+            end
+          end
         end
 
         if p1.can_loot?
@@ -415,15 +426,15 @@ class WorldController < ApplicationController
       # does the current player have one of these already?
       existing_items = PlayerItem.where(:player => player, :item_type => item_type)
       if existing_items.length >= 1
-        # unequip if it is equippable
-        if existing_items.first.item_type.can_equip?
-          unequip_item(existing_items.first)
-        end
         # update quantity
         if existing_items.first.quantity > 1
           existing_items.first.quantity -= 1
           existing_items.first.save()
         else
+          # unequip if it is equippable
+          if existing_items.first.item_type.can_equip?
+            unequip_item(existing_items.first)
+          end
           existing_items.first.destroy()
         end
         player.update_score()
