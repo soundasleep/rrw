@@ -42,3 +42,7 @@ $(document).on 'page:change', ->
   $("form").unbind('submit').on 'submit', (e) ->
     $(e.target).find("input, button[type=submit], button[type=reset]").addClass('disabled')
     return true
+
+$(document).on 'page:change', ->
+  ga('set', 'location', location.href.split('#')[0])
+  ga('send', 'pageview')
