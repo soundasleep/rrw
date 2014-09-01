@@ -6,6 +6,8 @@ spaces:
     description: Your home village
     connect:
       inn: to the inn
+      wizard: to the wizard den
+      forest: into the forest
 
   inn:
     name: Inn
@@ -22,14 +24,14 @@ spaces:
         respawns: 60
 
         sells:
-          multiplier: 1
+          multiplier: 1.34
           health_potion:
             quantity: 1
             respawns: 60
-            multiplier: 1.34
           bed:
             quantity: 5
             respawns: 60
+            multiplier: 1
 
         buys:
           multiplier: 0.67
@@ -45,13 +47,160 @@ spaces:
         level: 1
         health: 3
         respawns: 5
-        blocks: home
 
       mouse_2:
         name: Mouse 2
         level: 1
         health: 3
         respawns: 5
+
+      mouse_3:
+        name: Mouse 3
+        level: 1
+        health: 3
+        respawns: 5
+
+      mouse_4:
+        name: Mouse 4
+        level: 1
+        health: 3
+        respawns: 5
+
+  wizard:
+    name: Wizard den
+    description: A rustic house filled with charms and potions
+    connect:
+      home: back into town
+
+    npcs:
+      wizard:
+        name: Wizard
+        friendly: true
+        level: 20
+        health: 100
+        respawns: 60
+
+        sells:
+          multiplier: 1.25
+          health_potion:
+            quantity: 3
+            respawns: 60
+          town_portal:
+            quantity: 2
+            respawns: 120
+          scroll_fireball:
+            quantity: 1
+            respawns: 120
+
+        buys:
+          multiplier: 0.75
+          health_potion:
+            -
+          sapphire:
+            -
+          town_portal:
+            -
+          scroll_fireball:
+            -
+          scroll_lightning:
+            -
+
+  forest:
+    name: Dark forest
+    description: "A dark and scary forest, filled with critters"
+    connect:
+      home: back into town
+      dusty_cave: into a cave
+      mountain_pass: through the mountain pass
+
+    npcs:
+      spider_1:
+        name: Black spider 1
+        level: 2
+        health: 10
+        respawns: 30
+      spider_2:
+        name: Black spider 2
+        level: 2
+        health: 10
+        respawns: 30
+
+  dusty_cave:
+    name: Dusty cave
+    description: "A dark and dusty cave in the cliffside, delving deep underground"
+    connect:
+      forest: out into the forest
+      dusty_cave_2: deeper into the cave
+
+    npcs:
+      mouse:
+        name: Mouse
+        level: 3
+        health: 7
+        respawns: 45
+        blocks: dusty_cave_2
+
+  dusty_cave_2:
+    name: Dusty cave Level 2
+    description: The dark caves delves deep underground with only a cool breeze to keep you company
+    connect:
+      dusty_cave: back to the first cave level
+      dusty_cave_3: deeper into the cave
+
+    npcs:
+      lizard:
+        name: Red lizard
+        level: 3
+        health: 25
+        respawns: 45
+
+      spider:
+        name: Black spider
+        level: 4
+        health: 30
+        respawns: 30
+        blocks: dusty_cave_3
+
+  dusty_cave_3:
+    name: Dusty cave Level 3
+    description: "A pitch black, desolate chasm deep underground"
+    connect:
+      dusty_cave_2: back to the second cave level
+
+    npcs:
+      black_dragon:
+        name: Black dragon
+        level: 5
+        health: 40
+        respawns: 120
+
+  mountain_pass:
+    name: Mountain pass
+    description: "A cold and dusty mountain pass, with only brief glimpses of the forest below"
+    connect:
+      forest: back into the forest
+      mountain_peak: up into the mountains
+
+    npcs:
+      lizard:
+        name: Black lizard
+        level: 3
+        health: 25
+        respawns: 120
+        blocks: mountain_peak
+
+  mountain_peak:
+    name: Mountain peak
+    description: "A cold and icy mountain peak, unforgiving in its unforgivingness"
+    connect:
+      mountain_pass: back through the mountain pass
+
+    npcs:
+      ice_dragon:
+        name: Ice dragon
+        level: 8
+        health: 60
+        respawns: 240
 
 items:
   health_potion:
@@ -63,6 +212,36 @@ items:
     name: Dagger
     description: A blunt weapon for stabbing things
     cost: 20
+
+  sword:
+    name: Sword
+    description: A sharp weapon for slicing things
+    cost: 30
+
+  katana:
+    name: Katana
+    description: "A curved, slender weapon for slicing things"
+    cost: 60
+
+  sapphire:
+    name: Sapphire
+    description: A shiny sapphire gem that's probably worth a lot
+    cost: 200
+
+  town_portal:
+    name: Scroll of Town Portal
+    description: An ancient coded scroll to return you back home
+    cost: 30
+
+  scroll_fireball:
+    name: Scroll of Fireball
+    description: A one-use ancient coded scroll to destroy your enemies with flame
+    cost: 40
+
+  scroll_lightning:
+    name: Scroll of Lightning
+    description: A one-use ancient coded scroll to destroy your enemies with lightning
+    cost: 100
 
   bed:
     name: Bed

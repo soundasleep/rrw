@@ -36,6 +36,11 @@ file["spaces"].each do |space_id, space|
 
   # npcs
   (space['npcs'] or {}).each do |npc_id, npc|
+    npc_type = npc_id
+    if npc_type.match(/_[0-9]+$/)
+      npc_type = npc_type.sub(/_[0-9]+$/, "")
+    end
+
     cache[:npcs][space_id][npc_id] = Npc.create({
       :name => npc['name'],
       :friendly => npc['friendly'],
@@ -44,27 +49,27 @@ file["spaces"].each do |space_id, space|
       :level => npc['level'],
       :respawns => npc['respawns'],
       :space_id => cache[:spaces][space_id].id,
-      :character_type => npc_id.split("_").first,
+      :character_type => npc_type,
       :can_sell => npc['buys'] != nil,
       :can_buy => npc['sells'] != nil,
     })
 
     # can_buy
     if npc['buys']
-      multiplier = npc['buys']['multiplier'].to_f or 1.0
+      multiplier = npc['buys']['multiplier'] or 1
       npc['buys'].select { |key, value| key != "multiplier" }.each do |key, value|
         value = {} if value === [nil]   # convert array of nil into empty hash
         NpcBuys.create({
           :npc => cache[:npcs][space_id][npc_id],
           :item_type => cache[:items][key],
-          :multiplier => (value['multiplier'].to_f or multiplier),
+          :multiplier => (value['multiplier'] or multiplier).to_f,
       })
       end
     end
 
     # can_sell
     if npc['sells']
-      multiplier = npc['sells']['multiplier'].to_f or 1
+      multiplier = npc['sells']['multiplier'] or 1
       npc['sells'].select { |key, value| key != "multiplier" }.each do |key, value|
         value = {} if value === [nil]   # convert array of nil into empty hash
         NpcSells.create({
@@ -73,7 +78,7 @@ file["spaces"].each do |space_id, space|
           :current_quantity => value['quantity'],
           :max_quantity => value['quantity'],
           :respawns => value['respawns'],
-          :multiplier => (value['multiplier'].to_f or multiplier),
+          :multiplier => (value['multiplier'] or multiplier).to_f,
       })
       end
     end

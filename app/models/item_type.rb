@@ -116,7 +116,7 @@ end
 
 class ItemType_Scroll_Fireball < ItemType_Weapon
   def get_damage
-    (1..5).map( 1 + Random.rand(3) ).sum
+    (1..5).map{ 1 + Random.rand(3) }.sum
   end
 
   def get_damage_string
