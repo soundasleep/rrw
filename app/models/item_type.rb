@@ -5,7 +5,7 @@ class ItemType < ActiveRecord::Base
   # and behaviour in the database model; we only have to track the item_types.
   def get_model
     case self.item_type
-      when "potion_health"
+      when "health_potion"
         return ItemType_HealthPotion.new()
       when "dagger"
         return ItemType_Dagger.new()

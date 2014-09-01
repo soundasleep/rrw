@@ -1,0 +1,70 @@
+# Initial world data, loaded through `seeds.rb`
+
+spaces:
+  home:
+    name: Home
+    description: Your home village
+    connect:
+      inn: to the inn
+
+  inn:
+    name: Inn
+    description: The village inn
+    connect:
+      home: back into town
+
+    npcs:
+      innkeeper:
+        name: Innkeeper
+        friendly: true
+        level: 20
+        health: 100
+        respawns: 60
+
+        sells:
+          multiplier: 1
+          health_potion:
+            quantity: 1
+            respawns: 60
+            multiplier: 1.34
+          bed:
+            quantity: 5
+            respawns: 60
+
+        buys:
+          multiplier: 0.67
+          health_potion:
+            -
+          dagger:
+            -
+          sword:
+            -
+
+      mouse_1:
+        name: Mouse 1
+        level: 1
+        health: 3
+        respawns: 5
+        blocks: home
+
+      mouse_2:
+        name: Mouse 2
+        level: 1
+        health: 3
+        respawns: 5
+
+items:
+  health_potion:
+    name: Health potion
+    description: A potion that restores 10 health
+    cost: 10
+
+  dagger:
+    name: Dagger
+    description: A blunt weapon for stabbing things
+    cost: 20
+
+  bed:
+    name: Bed
+    description: A safe space to sleep in for the night
+    cost: 5
