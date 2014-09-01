@@ -11,6 +11,8 @@ class ItemType < ActiveRecord::Base
         return ItemType_Dagger.new()
       when "sword"
         return ItemType_Sword.new()
+      when "katana"
+        return ItemType_Katana.new()
       when "sapphire"
         return ItemType_Abstract.new()
       when "bed"
@@ -111,6 +113,16 @@ class ItemType_Sword < ItemType_Weapon
 
   def get_damage_string
     "1d8"
+  end
+end
+
+class ItemType_Katana < ItemType_Weapon
+  def get_damage
+    1 + Random.rand(12)
+  end
+
+  def get_damage_string
+    "1d12"
   end
 end
 
