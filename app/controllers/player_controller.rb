@@ -16,7 +16,7 @@ class PlayerController < ApplicationController
     @player = Player.new(player_params)
 
     @player.level = 1
-    @player.gold = 100
+    @player.gold = 0
     @player.current_health = 20
     @player.total_health = 20
     @player.is_active = true

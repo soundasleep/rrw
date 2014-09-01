@@ -376,9 +376,11 @@ class WorldController < ApplicationController
             add_combat_log "#{p1.current_weapon.item_type.name} has been used"
             remove_item(p1, p1.current_weapon.item_type)
 
-            # equip the next weapon, if there are any
-            if weapon = p1.player_items.where(:equipped => false).select { |item| item.item_type.is_weapon? }.first
-              equip_item(weapon)
+            if not p1.current_weapon
+              # equip the next weapon, if there are any
+              if weapon = p1.player_items.where(:equipped => false).select { |item| item.item_type.is_weapon? }.first
+                equip_item(weapon)
+              end
             end
           end
         end
