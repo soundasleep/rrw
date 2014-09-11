@@ -73,3 +73,6 @@ gem 'ci_reporter_minitest', '~> 1.0.0'
 
 # Bower components
 gem 'rails-assets-moment'
+
+# Test coverage with Code Climate
+gem "codeclimate-test-reporter", group: :test, require: nil
