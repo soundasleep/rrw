@@ -19,3 +19,6 @@
 
 # Ignore test reports
 /test/reports
+
+# Ignore sublime workspace
+*.sublime-workspace
