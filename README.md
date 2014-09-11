@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/soundasleep/rrw/badges/gpa.svg)](https://codeclimate.com/github/soundasleep/rrw)
+
 ### Getting started
 
 `rake db:setup` will setup or reset the initial world.
