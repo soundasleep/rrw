@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/soundasleep/rrw/badges/gpa.svg)](https://codeclimate.com/github/soundasleep/rrw)
+[![Build Status](https://travis-ci.org/soundasleep/rrw.svg?branch=master)](https://travis-ci.org/soundasleep/rrw) [![Code Climate](https://codeclimate.com/github/soundasleep/rrw/badges/gpa.svg)](https://codeclimate.com/github/soundasleep/rrw)
 
 ### Getting started
 
