@@ -25,4 +25,8 @@ class AbstractPlayerTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?("You are currently at Home")
   end
+
+  def current_player
+    @current_player ||= @user.current_player
+  end
 end
