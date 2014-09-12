@@ -76,3 +76,7 @@ gem 'rails-assets-moment'
 
 # Test coverage with Code Climate
 gem "codeclimate-test-reporter", group: :test, require: nil
+
+# Capybara integration testing
+gem "capybara"
+gem "launchy"

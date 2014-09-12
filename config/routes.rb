@@ -40,6 +40,7 @@ Rrw::Application.routes.draw do
   get "/signout" => "sessions#destroy", :as => :signout
 
   post "sessions/test"
+  get "sessions/test"
 
   # Example resource route with options:
   #   resources :products do
