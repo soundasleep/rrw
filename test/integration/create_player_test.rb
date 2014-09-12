@@ -38,7 +38,7 @@ class CreatePlayerTest < AbstractPlayerTest
     click_button "Go to the inn"
     click_button "Attack Mouse 1"
     assert page.has_content?("#{@user.name} attacked Mouse 1 with 1d3 causing")
-    assert page.has_content?("Mouse 1 attacked #{@user.name} with 1d3 causing")
+    # the mouse may be dead
   end
 
 end
