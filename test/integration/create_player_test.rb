@@ -22,4 +22,23 @@ class CreatePlayerTest < AbstractPlayerTest
     assert page.has_content?("Mouse 1 attacked #{@user.name} with 1d3 causing")
   end
 
+  test "can unequip the starting dagger" do
+    create_player!
+
+    click_link("Inventory (1)")
+    assert page.has_content?("1 x Dagger")
+    assert page.has_content?("(equipped)")
+
+    click_button "Unequip"
+    assert page.has_content?("1 x Dagger")
+    assert page.has_no_content?("(equipped)")
+
+    # now if we attack the mouse, we do 1d3 damage
+    click_link("Home")
+    click_button "Go to the inn"
+    click_button "Attack Mouse 1"
+    assert page.has_content?("#{@user.name} attacked Mouse 1 with 1d3 causing")
+    assert page.has_content?("Mouse 1 attacked #{@user.name} with 1d3 causing")
+  end
+
 end
