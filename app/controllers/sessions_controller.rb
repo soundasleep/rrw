@@ -28,4 +28,18 @@ class SessionsController < ApplicationController
 
   def index
   end
+
+  # testing only (post)
+  def test
+    user = User.find(params[:id])
+    if user.provider == "testing"
+      session[:user_id] = user.id
+      notice = "Signed in!"
+      url = root_path
+      logger.debug "URL to redirect to: #{url}"
+      redirect_to url, :notice => notice
+    else
+      raise "Failed to login"
+    end
+  end
 end

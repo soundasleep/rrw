@@ -39,6 +39,8 @@ Rrw::Application.routes.draw do
   get "/auth/google_login/callback" => "sessions#create"
   get "/signout" => "sessions#destroy", :as => :signout
 
+  post "sessions/test"
+
   # Example resource route with options:
   #   resources :products do
   #     member do
