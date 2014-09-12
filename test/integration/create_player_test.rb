@@ -1,30 +1,25 @@
 require "integration_test_helper"
 
-class CreatePlayerTest < ActionDispatch::IntegrationTest
+class CreatePlayerTest < AbstractPlayerTest
 
-  setup do
-    @user = User.new(name: "Test user", provider: "testing")
-    @user.save()
+  test "can create a new player" do
+    create_player!
   end
 
-  teardown do
-    @user.destroy
-  end
+  test "can travel and attack" do
+    create_player!
 
-  def do_login!
-    # login through test method
-    visit "/sessions/test?id=#{@user.id}"
-    assert_equal "/player/new", current_path
-  end
+    assert page.has_no_content?("Innkeeper")
+    assert page.has_no_content?("#{@user.name} attacked Mouse 1 with 1d4 causing")
 
-  test "create a new player" do
-    do_login!
+    click_button "Go to the inn"
+    assert page.has_content?("You are currently at Inn")
+    assert page.has_content?("Innkeeper")
+    assert page.has_no_content?("#{@user.name} attacked Mouse 1 with 1d4 causing")
 
-    visit "/player/new"
-    assert page.has_field?("Name", with: @user.name)
-    click_button "Start playing"
-
-    assert page.has_content?("You are currently at Home")
+    click_button "Attack Mouse 1"
+    assert page.has_content?("#{@user.name} attacked Mouse 1 with 1d4 causing")
+    assert page.has_content?("Mouse 1 attacked #{@user.name} with 1d3 causing")
   end
 
 end
