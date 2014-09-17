@@ -96,14 +96,11 @@ class WorldController < ApplicationController
   end
 
   def travel
-    begin
-      return unless player_is_valid?
-      current_player.travel! Connection.find(params[:connection])
-      redirect_to "/world/index"
-    rescue WorldError => detail
-      add_error detail
-      redirect_to "/world/index"
+    return unless player_is_valid?
+    if not current_player.travel(Connection.find(params[:connection]))
+      add_errors current_player.errors
     end
+    redirect_to "/world/index"
   end
 
   def attack

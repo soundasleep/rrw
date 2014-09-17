@@ -1,4 +1,6 @@
 class Player < Character
+  include Errorable
+
   after_initialize :init
 
   # not 'has_one': causes "can't write unknown attribute `player_id'"
@@ -78,16 +80,17 @@ class Player < Character
 
   ###
    # Travel along the given connection
-   # @throw WorldError if this travel is not permitted or impossible
+   # @return true if successful
+   # @see #errors
   ###
-  def travel!(connection)
-    raise WorldError, "You are in no space" if not space
-    raise WorldError, "Invalid connection" unless connection
-    raise WorldError, "You are not in that space (#{connection.from} != #{space})" unless connection.from == space
+  def travel(connection)
+    return add_error "You are in no space" unless space
+    return add_error "Invalid connection" unless connection
+    return add_error "You are not in that space" unless connection.from == space
 
     # check that if there's a require_death, that this npc is dead
     if connection.requires_death and connection.requires_death.current_health > 0
-      raise WorldError, "You cannot travel there without first killing #{connection.requires_death.name}"
+      return add_error "You cannot travel there without first killing #{connection.requires_death.name}"
     end
 
     self.space = connection.to
@@ -96,5 +99,7 @@ class Player < Character
     # add 'entered' and 'left' chats
     Chat.new(:space => space, :player => self, :text => "left " + space.name, :is_leaving => true).save()
     Chat.new(:space => connection.to, :player => self, :text => "entered " + connection.to.name, :is_entering => true).save()
+
+    return true
   end
 end

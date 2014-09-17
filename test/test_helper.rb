@@ -16,4 +16,19 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def assert_true(test, message="Expected: true. Actual: #{test}.")
+    assert_equal true, test, message
+  end
+
+  def assert_false(test, message="Expected: false. Actual: #{test}.")
+    assert_equal false, test, message
+  end
+
+  def assert_greater_than(expected, actual, message = "Expected #{actual} to be greater than #{expected}")
+    assert_operator actual, :>, expected
+  end
+
+  def assert_less_than(expected, actual, message = "Expected #{actual} to be less than #{expected}")
+    assert_operator actual, :<, expected
+  end
 end

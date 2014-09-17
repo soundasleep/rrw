@@ -48,6 +48,10 @@ class ApplicationController < ActionController::Base
     session[:errors].push e
   end
 
+  def add_errors(errors)
+    errors.each { |e| add_error(e) }
+  end
+
   def add_combat_log(e)
     if not session[:combat_log]
       session[:combat_log] = []
