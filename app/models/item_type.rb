@@ -1,31 +1,32 @@
 class ItemType < ActiveRecord::Base
+  after_initialize :init
+
+  # Initialise model defaults
+  def init
+    # Check that item_type is valid, or throw an ArgumentError
+    raise ArgumentError, "Unknown item_type type #{item_type}" unless model_classes.has_key?(item_type)
+  end
+
   # Get an emulated super type representing the ItemType through the
   # ItemType.item_type key.
   # By putting this into the Ruby logic, we don't have to try and store all item properties
   # and behaviour in the database model; we only have to track the item_types.
   def get_model
-    case self.item_type
-      when "health_potion"
-        return ItemType_HealthPotion.new()
-      when "dagger"
-        return ItemType_Dagger.new()
-      when "sword"
-        return ItemType_Sword.new()
-      when "katana"
-        return ItemType_Katana.new()
-      when "sapphire"
-        return ItemType_Abstract.new()
-      when "bed"
-        return ItemType_Abstract.new()
-      when "town_portal"
-        return ItemType_TownPortal.new()
-      when "scroll_fireball"
-        return ItemType_Scroll_Fireball.new()
-      when "scroll_lightning"
-        return ItemType_Scroll_Lightning.new()
-      else
-        raise ArgumentError, "Unknown item type #{self.item_type}"
-    end
+    return model_classes[item_type].new()
+  end
+
+  def model_classes
+    {
+      "health_potion" => ItemType_HealthPotion,
+      "dagger" => ItemType_Dagger,
+      "sword" => ItemType_Sword,
+      "katana" => ItemType_Katana,
+      "sapphire" => ItemType_Sapphire,
+      "bed" => ItemType_Bed,
+      "town_portal" => ItemType_TownPortal,
+      "scroll_fireball" => ItemType_Scroll_Fireball,
+      "scroll_lightning" => ItemType_Scroll_Lightning,
+    }
   end
 
   def can_use?
@@ -123,6 +124,12 @@ class ItemType_Sword < ItemType_Weapon
   def get_damage_string
     "1d8"
   end
+end
+
+class ItemType_Sapphire < ItemType_Abstract
+end
+
+class ItemType_Bed < ItemType_Abstract
 end
 
 class ItemType_Katana < ItemType_Weapon

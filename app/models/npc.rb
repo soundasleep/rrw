@@ -1,39 +1,39 @@
 class Npc < Character
-  # Get an emulated super type representing the ItemType through the
-  # ItemType.item_type key.
-  # By putting this into the Ruby logic, we don't have to try and store all item properties
-  # and behaviour in the database model; we only have to track the item_types.
-  def get_model
-    case self.character_type
-      when "innkeeper"
-        return Npc_Innkeeper.new()
-      when "wizard"
-        return Npc_Wizard.new()
-      when "mouse"
-        return Npc_Mouse.new()
-      when "spider"
-        return Npc_Spider.new()
-      when "lizard"
-        return Npc_Lizard.new()
-      when "ice_dragon"
-        return Npc_IceDragon.new()
-      when "black_dragon"
-        return Npc_BlackDragon.new()
-      else
-        raise ArgumentError, "Unknown character type #{self.character_type}"
-    end
-  end
-
   after_initialize :init
-
-  belongs_to :attacking, class_name: "Player"
 
   # Initialise model defaults
   def init
     self.level ||= 1
     self.total_health ||= 5
     self.current_health ||= self.total_health
+    self.character_type ||= "default"
+
+    # Check that character_type is valid, or throw an ArgumentError
+    raise ArgumentError, "Unknown character type #{character_type}" unless model_classes.has_key?(character_type)
   end
+
+  # Get an emulated super type representing the ItemType through the
+  # ItemType.item_type key.
+  # By putting this into the Ruby logic, we don't have to try and store all item properties
+  # and behaviour in the database model; we only have to track the item_types.
+  def get_model
+    return model_classes[character_type].new()
+  end
+
+  def model_classes
+    {
+      "default" => Npc_Default,
+      "innkeeper" => Npc_Innkeeper,
+      "wizard" => Npc_Wizard,
+      "mouse" => Npc_Mouse,
+      "spider" => Npc_Spider,
+      "lizard" => Npc_Lizard,
+      "ice_dragon" => Npc_IceDragon,
+      "black_dragon" => Npc_BlackDragon,
+    }
+  end
+
+  belongs_to :attacking, class_name: "Player"
 
   def attacking
     if self.attacking_id
@@ -88,6 +88,9 @@ class Npc_Abstract
   def chance(f)
     return Random.rand(f * 100) < f
   end
+end
+
+class Npc_Default < Npc_Abstract
 end
 
 class Npc_Innkeeper < Npc_Abstract
