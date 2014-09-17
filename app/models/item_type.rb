@@ -59,8 +59,8 @@ class ItemType < ActiveRecord::Base
   end
 
   # Use this item in some way
-  def use(context)
-    get_model.use(context, self)
+  def use(current_player)
+    get_model.use(current_player, self)
   end
 end
 
@@ -87,11 +87,11 @@ class ItemType_HealthPotion < ItemType_Abstract
     true
   end
 
-  def use(context, item_type)
-    healed = [context.current_player.total_health, context.current_player.current_health + 10].min - context.current_player.current_health
-    context.current_player.current_health += healed
-    context.add_combat_log "Healed #{healed} health with #{item_type.name}"
-    context.current_player.save()
+  def use(current_player, item_type)
+    healed = [current_player.total_health, current_player.current_health + 10].min - current_player.current_health
+    current_player.current_health += healed
+    current_player.add_log "Healed #{healed} health with #{item_type.name}"
+    current_player.save()
   end
 end
 
@@ -168,16 +168,16 @@ class ItemType_TownPortal < ItemType_Abstract
     true
   end
 
-  def use(context, item_type)
+  def use(current_player, item_type)
     home_space = Space.where(:name => "Home")
     if home_space.length > 0
       # add 'entered' and 'left' chats
-      Chat.new(:space => context.current_player.space, :player => context.current_player, :text => "transported out of " + context.current_player.space.name, :is_leaving => true).save()
-      Chat.new(:space => home_space.first, :player => context.current_player, :text => "transported to " + home_space.first.name, :is_entering => true).save()
+      Chat.new(:space => current_player.space, :player => current_player, :text => "transported out of " + current_player.space.name, :is_leaving => true).save()
+      Chat.new(:space => home_space.first, :player => current_player, :text => "transported to " + home_space.first.name, :is_entering => true).save()
 
-      context.current_player.space_id = home_space.first.id
-      context.add_combat_log "Used #{item_type.name}"
-      context.current_player.save()
+      current_player.space_id = home_space.first.id
+      current_player.add_log "Used #{item_type.name}"
+      current_player.save()
     end
   end
 end

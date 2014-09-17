@@ -183,6 +183,33 @@ class Player < Character
   end
 
   ###
+   # Use the given item.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def use(player_item)
+    return add_problem "Could not find that item to use" unless player_item
+    return add_problem "That is not your item to use" unless player_item.player == self
+    return add_problem "You cannot use a #{player_item.item_type}" unless player_item.item_type.can_use?
+
+    player_item.item_type.use(self)
+    add_log "You used one #{player_item.item_type.name}"
+
+    # consumable?
+    if player_item.item_type.is_consumable?
+      if player_item.quantity > 1
+        player_item.quantity -= 1
+        player_item.save()
+      else
+        player_item.destroy()
+      end
+    end
+
+    return true
+  end
+
+  ###
    # Equip the given item.
    # @return true if successful
    # @see errors

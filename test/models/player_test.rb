@@ -116,6 +116,51 @@ class PlayerTest < ActiveSupport::TestCase
     assert_equal(0, player.gold)
   end
 
+  test "can use a health potion" do
+    player = Player.new(:current_health => 10, :total_health => 20)
+    item_type = ItemType.new(:item_type => "health_potion")
+    player_item = PlayerItem.new(:player => player, :item_type => item_type)
+    player_item.save()
+
+    assert_true player.has_item_type?(item_type)
+
+    assert_true player.use(player_item)
+
+    # consumable
+    assert_false player.has_item_type?(item_type)
+    assert_equal 20, player.current_health
+  end
+
+  test "can use two health potions" do
+    player = Player.new(:current_health => 10, :total_health => 30)
+    item_type = ItemType.new(:item_type => "health_potion")
+    player_item = PlayerItem.new(:player => player, :item_type => item_type, :quantity => 2)
+    player_item.save()
+
+    assert_true player.has_item_type?(item_type)
+
+    assert_true player.use(player_item)
+
+    # consumable
+    assert_true player.has_item_type?(item_type)
+    assert_equal 20, player.current_health
+
+    assert_true player.use(player_item)
+
+    # consumable
+    assert_false player.has_item_type?(item_type)
+    assert_equal 30, player.current_health
+  end
+
+  test "cannot use a weapon" do
+    player = Player.new
+    item_type = ItemType.new(:item_type => "sword")
+    player_item = PlayerItem.new(:player => player, :item_type => item_type)
+    player_item.save()
+
+    assert_false player.use(player_item)
+  end
+
   test "can equip a weapon" do
     player = Player.new
     item_type = ItemType.new(:item_type => "sword")

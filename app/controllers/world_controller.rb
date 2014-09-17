@@ -129,35 +129,9 @@ class WorldController < ApplicationController
 
   def use
     return unless player_is_valid?
-
-    if current_player and params[:player_item]
-      player_items = PlayerItem.where(:id => params[:player_item])
-      if player_items.length == 1
-        player_item = player_items.first
-        if player_item.item_type.can_use?
-          player_item.item_type.use(self)
-          add_combat_log "You used one #{player_item.item_type.name}"
-
-          # consumable?
-          if player_item.item_type.is_consumable?
-            if player_item.quantity > 1
-              player_item.quantity -= 1
-              player_item.save()
-            else
-              player_item.destroy()
-            end
-          end
-
-          # success
-          return redirect_to "/player/index"
-        else
-          add_error "You cannot use a #{player_item.item_type.name}"
-          return redirect_to "/player/index"
-        end
-      end
-    end
-
-    add_error "Could not find that item to use"
+    current_player.use(PlayerItem.find(params[:player_item]))
+    add_errors current_player.problems
+    add_combat_logs current_player.logs
     redirect_to "/player/index"
   end
 
