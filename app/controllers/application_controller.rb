@@ -59,6 +59,10 @@ class ApplicationController < ActionController::Base
     session[:combat_log].push e
   end
 
+  def add_combat_logs(logs)
+    logs.each { |x| add_combat_log(x) }
+  end
+
   def class_name
     "controller-" + controller_name + " controller-" + controller_name + "-" + action_name
   end

@@ -100,6 +100,7 @@ class WorldController < ApplicationController
     if not current_player.travel(Connection.find(params[:connection]))
       add_errors current_player.errors
     end
+    add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
 
@@ -109,6 +110,7 @@ class WorldController < ApplicationController
     if not current_player.attack(Npc.find(params[:npc]))
       add_errors current_player.errors
     end
+    add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
 
