@@ -1,5 +1,5 @@
 class Player < Character
-  include Errorable
+  include Problemable
 
   after_initialize :init
 
@@ -96,13 +96,13 @@ class Player < Character
    # @see #errors
   ###
   def travel(connection)
-    return add_error "You are in no space" unless space
-    return add_error "Invalid connection" unless connection
-    return add_error "You are not in that space" unless connection.from == space
+    return add_problem "You are in no space" unless space
+    return add_problem "Invalid connection" unless connection
+    return add_problem "You are not in that space" unless connection.from == space
 
     # check that if there's a require_death, that this npc is dead
     if connection.requires_death and connection.requires_death.current_health > 0
-      return add_error "You cannot travel there without first killing #{connection.requires_death.name}"
+      return add_problem "You cannot travel there without first killing #{connection.requires_death.name}"
     end
 
     self.space = connection.to
@@ -122,8 +122,8 @@ class Player < Character
    # @see #logs
   ###
   def attack(npc)
-    return add_error "Could not find that NPC" unless npc
-    return add_error "That NPC is already dead" unless npc.current_health > 0
+    return add_problem "Could not find that NPC" unless npc
+    return add_problem "That NPC is already dead" unless npc.current_health > 0
 
     self.do_attack(npc)
     if npc.current_health > 0
@@ -142,9 +142,9 @@ class Player < Character
    # @see logs
   ###
   def buy(npc_sell)
-    return add_error "Could not find that sellable item" unless npc_sell
-    return add_error "You do not have enough gold to purchase that" unless self.gold >= npc_sell.cost
-    return add_error "That NPC does not have any of those to sell to you" unless npc_sell.current_quantity > 0
+    return add_problem "Could not find that sellable item" unless npc_sell
+    return add_problem "You do not have enough gold to purchase that" unless self.gold >= npc_sell.cost
+    return add_problem "That NPC does not have any of those to sell to you" unless npc_sell.current_quantity > 0
 
     npc_sell.current_quantity -= 1
     self.gold -= npc_sell.cost
@@ -172,9 +172,9 @@ class Player < Character
    # @see logs
   ###
   def sell(npc_buy)
-    return add_error "Could not find that buyable item" unless npc_buy
+    return add_problem "Could not find that buyable item" unless npc_buy
 
-    return add_error "Could not sell that item" unless remove_item(npc_buy.item_type)
+    return add_problem "Could not sell that item" unless remove_item(npc_buy.item_type)
     self.gold += npc_buy.cost
     add_log "You sold one #{npc_buy.item_type.name} to #{npc_buy.npc.name} for #{npc_buy.cost}g"
     update_score()
@@ -189,11 +189,11 @@ class Player < Character
    # @see logs
   ###
   def equip(player_item)
-    return add_error "Could not find that item to equip" unless player_item
-    return add_error "That is not your item to equip" unless player_item.player == self
+    return add_problem "Could not find that item to equip" unless player_item
+    return add_problem "That is not your item to equip" unless player_item.player == self
 
     success = do_equip(player_item)
-    return add_error "You cannot equip a #{player_item.item_type.name}" unless success
+    return add_problem "You cannot equip a #{player_item.item_type.name}" unless success
 
     return true
   end
@@ -205,12 +205,12 @@ class Player < Character
    # @see logs
   ###
   def unequip(player_item)
-    return add_error "Could not find that item to unequip" unless player_item
-    return add_error "That is not your item to uneqip" unless player_item.player == self
-    return add_error "That item is already unequipped" unless player_item.equipped
+    return add_problem "Could not find that item to unequip" unless player_item
+    return add_problem "That is not your item to uneqip" unless player_item.player == self
+    return add_problem "That item is already unequipped" unless player_item.equipped
 
     success = do_unequip(player_item)
-    return add_error "You cannot unequip a #{player_item.item_type.name}" unless success
+    return add_problem "You cannot unequip a #{player_item.item_type.name}" unless success
 
     return true
   end

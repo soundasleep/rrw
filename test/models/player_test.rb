@@ -9,7 +9,7 @@ class PlayerTest < ActiveSupport::TestCase
     player.space = s1
 
     assert_true player.travel(c), "Should have been able to travel"
-    assert_equal 0, player.errors.length
+    assert_equal 0, player.problems.length
     assert_equal s2, player.space
   end
 
@@ -22,7 +22,7 @@ class PlayerTest < ActiveSupport::TestCase
     player.space = s1
 
     assert_false player.travel(c), "Should not have been able to travel"
-    assert_greater_than 0, player.errors.length
+    assert_greater_than 0, player.problems.length
     assert_equal s1, player.space
   end
 

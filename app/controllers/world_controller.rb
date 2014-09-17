@@ -98,7 +98,7 @@ class WorldController < ApplicationController
   def travel
     return unless player_is_valid?
     current_player.travel(Connection.find(params[:connection]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
@@ -106,7 +106,7 @@ class WorldController < ApplicationController
   def attack
     return unless player_is_valid?
     current_player.attack(Npc.find(params[:npc]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
@@ -114,7 +114,7 @@ class WorldController < ApplicationController
   def buy
     return unless player_is_valid?
     current_player.buy(NpcSells.find(params[:npc_sells]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
@@ -122,7 +122,7 @@ class WorldController < ApplicationController
   def sell
     return unless player_is_valid?
     current_player.sell(NpcBuys.find(params[:npc_buys]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
@@ -164,17 +164,17 @@ class WorldController < ApplicationController
   def equip
     return unless player_is_valid?
     current_player.equip(PlayerItem.find(params[:player_item]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    redirect_to "/player/index"
   end
 
   def unequip
     return unless player_is_valid?
     current_player.unequip(PlayerItem.find(params[:player_item]))
-    add_errors current_player.errors
+    add_errors current_player.problems
     add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    redirect_to "/player/index"
   end
 
   # helper methods
