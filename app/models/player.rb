@@ -102,4 +102,23 @@ class Player < Character
 
     return true
   end
+
+  ###
+   # Attack the given Npc.
+   # @return true if successful
+   # @see #errors
+  ###
+  def attack(npc)
+    return add_error "Could not find that NPC" unless npc
+
+    self.do_attack(npc)
+    if npc.current_health > 0
+      npc.attacking = self
+      npc.do_attack(self)
+      npc.save()
+    end
+
+    return true
+  end
+
 end

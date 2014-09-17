@@ -26,11 +26,13 @@ class Npc < Character
 
   after_initialize :init
 
+  belongs_to :attacking, class_name: "Player"
+
   # Initialise model defaults
   def init
     self.level ||= 1
-    self.current_health ||= 5
     self.total_health ||= 5
+    self.current_health ||= self.total_health
   end
 
   def attacking

@@ -106,21 +106,9 @@ class WorldController < ApplicationController
   def attack
     return unless player_is_valid?
 
-    if current_player and params[:npc]
-      npcs = Npc.where(:id => params[:npc])
-      if npcs.length == 1
-        npc = npcs.first
-        do_attack(current_player, npc)
-        if npc.current_health > 0
-          npc.attacking_id = current_player.id
-          do_attack(npc, current_player)
-          npc.save()
-        end
-        return redirect_to "/world/index"
-      end
+    if not current_player.attack(Npc.find(params[:npc]))
+      add_errors current_player.errors
     end
-
-    add_error "Could not find that NPC"
     redirect_to "/world/index"
   end
 
@@ -301,88 +289,6 @@ class WorldController < ApplicationController
 
   # private methods
   private
-
-    def do_attack(p1, p2)
-      damage = p1.get_damage
-      damage_string = p1.get_damage_string
-      p2.current_health -= damage
-      p2.save()
-      add_combat_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
-      if p2.current_health <= 0
-        p2.died_at = Time.now
-        p2.save()
-        add_combat_log "#{p2.name} has died"
-
-        # track who killed this player
-        if p2.track_killed_by?
-          p2.killed_by_id = p1.id
-          p2.save()
-
-          Chat.new(:space => p2.space, :player => p2, :text => "died", :is_death => true).save()
-
-          # stop the NPC attacking the player
-          # TODO have a parent class for (players, NPCs) rather than this fragile logic
-          p1.attacking_id = nil
-          p1.save()
-        end
-
-        # do post-combat mechanics: XP, loot
-        if p1.can_xp?
-          xp = p2.get_xp
-          add_combat_log "#{p1.name} gained #{xp} XP"
-          if p1.xp == nil
-            p1.xp = 0
-          end
-          p1.xp += xp
-          p1.save()
-
-          # upgrade levels?
-          if p1.xp >= p1.next_level_xp
-            p1.level += 1
-            add_combat_log "#{p1.name} has achieved level #{p1.level}!"
-            p1.current_health += 2
-            p1.total_health += 2
-            add_combat_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
-            p1.save()
-          else
-            # add_combat_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
-          end
-
-          # remove one-use weapons?
-          if p1.current_weapon and p1.current_weapon.item_type.is_one_attack?
-            add_combat_log "#{p1.current_weapon.item_type.name} has been used"
-            remove_item(p1, p1.current_weapon.item_type)
-
-            if not p1.current_weapon
-              # equip the next weapon, if there are any
-              if weapon = p1.player_items.where(:equipped => false).select { |item| item.item_type.is_weapon? }.first
-                equip_item(weapon)
-              end
-            end
-          end
-        end
-
-        if p1.can_loot?
-          loot = p2.get_loot
-          add_combat_log "#{p1.name} receives #{loot[:gold]} gold"
-          # TODO other loot types
-          # maybe create a new Loot class?
-          p1.gold += loot[:gold]
-          p1.save()
-
-          # any other items?
-          loot[:items].each do |item_type|
-            add_combat_log "#{p1.name} also receives one #{item_type.name}"
-            add_item p1, item_type
-          end
-        end
-
-        # tracks score?
-        if p1.track_score?
-          p1.update_score()
-        end
-      end
-    end
 
     def add_item(player, item_type)
       # does the current player have one of these already?
