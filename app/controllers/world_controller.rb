@@ -96,34 +96,14 @@ class WorldController < ApplicationController
   end
 
   def travel
-    return unless player_is_valid?
-
-    if current_player and current_player.space and params[:connection]
-      space = current_player.space
-      c = Connection.where(:from_id => space.id, :id => params[:connection]).first
-      if c
-        # check that if there's a require_death, that this npc is dead
-        if not c.requires_death or c.requires_death.current_health <= 0
-          current_player.space_id = c.to_id
-          current_player.update_score()
-          current_player.save()
-
-          # add 'entered' and 'left' chats
-          Chat.new(:space => space, :player => current_player, :text => "left " + space.name, :is_leaving => true).save()
-          Chat.new(:space => c.to, :player => current_player, :text => "entered " + c.to.name, :is_entering => true).save()
-
-          return redirect_to "/world/index"
-        else
-          add_error "You cannot travel there without first killing #{c.requires_death.name}"
-          return redirect_to "/world/index"
-        end
-      end
+    begin
+      return unless player_is_valid?
+      current_player.travel! Connection.find(params[:connection])
+      redirect_to "/world/index"
+    rescue WorldError => detail
+      add_error detail
+      redirect_to "/world/index"
     end
-
-    # or, bail out
-    # TODO display an error message
-    add_error "Could not find that connection"
-    redirect_to "/world/index"
   end
 
   def attack

@@ -21,4 +21,9 @@ class NpcTest < ActiveSupport::TestCase
     assert_not_equal 0, Npc.where(:can_sell => true).length || 0
   end
 
+  test "a default Npc is not dead" do
+    assert_not_equal 0, Npc.new().current_health
+    assert_not_equal 0, Npc.new().total_health
+  end
+
 end

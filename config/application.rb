@@ -22,5 +22,8 @@ module Rrw
 
     # fix [deprecated] warning
     config.i18n.enforce_available_locales = true
+
+    # load additional paths
+    config.autoload_paths += Dir["#{config.root}/app/errors/**/"]
   end
 end

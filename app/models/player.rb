@@ -1,6 +1,9 @@
 class Player < Character
   after_initialize :init
 
+  # not 'has_one': causes "can't write unknown attribute `player_id'"
+  belongs_to :space
+
   # Initialise model defaults
   def init
     self.name ||= "New player"
@@ -71,5 +74,27 @@ class Player < Character
   def update_score
     self.score = (xp ** 1.05).to_i + PlayerItem.where(:player => self).map { |item| item.item_type.base_cost * item.quantity }.inject(0, :+) + (gold / 10) - 20
     self.save()
+  end
+
+  ###
+   # Travel along the given connection
+   # @throw WorldError if this travel is not permitted or impossible
+  ###
+  def travel!(connection)
+    raise WorldError, "You are in no space" if not space
+    raise WorldError, "Invalid connection" unless connection
+    raise WorldError, "You are not in that space (#{connection.from} != #{space})" unless connection.from == space
+
+    # check that if there's a require_death, that this npc is dead
+    if connection.requires_death and connection.requires_death.current_health > 0
+      raise WorldError, "You cannot travel there without first killing #{connection.requires_death.name}"
+    end
+
+    self.space = connection.to
+    update_score()
+
+    # add 'entered' and 'left' chats
+    Chat.new(:space => space, :player => self, :text => "left " + space.name, :is_leaving => true).save()
+    Chat.new(:space => connection.to, :player => self, :text => "entered " + connection.to.name, :is_entering => true).save()
   end
 end

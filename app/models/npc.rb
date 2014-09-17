@@ -29,8 +29,8 @@ class Npc < Character
   # Initialise model defaults
   def init
     self.level ||= 1
-    self.current_health ||= 0
-    self.total_health ||= 0
+    self.current_health ||= 5
+    self.total_health ||= 5
   end
 
   def attacking

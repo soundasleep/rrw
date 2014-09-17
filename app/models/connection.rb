@@ -1,15 +1,6 @@
 class Connection < ActiveRecord::Base
-  belongs_to :from
-  belongs_to :to
+  belongs_to :from, class_name: "Space"
+  belongs_to :to, class_name: "Space"
 
-  def from
-    Space.where(:id => from_id).first
-  end
-  def to
-    Space.where(:id => to_id).first
-  end
-
-  def requires_death
-    Npc.where(:id => self.requires_death_id).first if self.requires_death_id
-  end
+  belongs_to :requires_death, class_name: "Npc"
 end
