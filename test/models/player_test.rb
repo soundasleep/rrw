@@ -48,7 +48,7 @@ class PlayerTest < ActiveSupport::TestCase
     player = Player.new(:total_health => 20, :gold => 20)
 
     npc = Npc.new
-    item_type = ItemType.new(:base_cost => 10)
+    item_type = ItemType.new(:base_cost => 10, :item_type => "sword")
     npc_sell = NpcSells.new(:item_type => item_type, :npc => npc, :current_quantity => 1)
 
     assert_false player.has_item_type?(item_type)
@@ -63,7 +63,7 @@ class PlayerTest < ActiveSupport::TestCase
     player = Player.new(:total_health => 20, :gold => 0)
 
     npc = Npc.new
-    item_type = ItemType.new(:base_cost => 10)
+    item_type = ItemType.new(:base_cost => 10, :item_type => "sword")
     npc_sell = NpcSells.new(:item_type => item_type, :npc => npc, :current_quantity => 1)
 
     assert_false player.has_item_type?(item_type)
@@ -78,7 +78,7 @@ class PlayerTest < ActiveSupport::TestCase
     player = Player.new(:total_health => 20, :gold => 20)
 
     npc = Npc.new
-    item_type = ItemType.new(:base_cost => 10)
+    item_type = ItemType.new(:base_cost => 10, :item_type => "sword")
     npc_sell = NpcSells.new(:item_type => item_type, :npc => npc, :current_quantity => 0)
 
     assert_false player.has_item_type?(item_type)
@@ -88,4 +88,66 @@ class PlayerTest < ActiveSupport::TestCase
     assert_false player.has_item_type?(item_type)
     assert_equal 0, player.get_items(item_type).length
   end
+
+  test "can sell something" do
+    player = Player.new(:gold => 0)
+    npc = Npc.new
+    item_type = ItemType.new(:base_cost => 10, :item_type => "sword")
+    npc_buy = NpcBuys.new(:item_type => item_type, :npc => npc)
+    player_item = PlayerItem.new(:player => player, :item_type => item_type)
+    player_item.save()
+
+    assert_true player.has_item_type?(item_type)
+
+    assert_true player.sell(npc_buy), "Should have been able to sell something"
+    assert_equal(10, player.gold)
+    assert_false player.has_item_type?(item_type)
+  end
+
+  test "can not sell something we don't have" do
+    player = Player.new(:gold => 0)
+    npc = Npc.new
+    item_type = ItemType.new(:base_cost => 10, :item_type => "sword")
+    npc_buy = NpcBuys.new(:item_type => item_type, :npc => npc)
+
+    assert_false player.has_item_type?(item_type)
+
+    assert_false player.sell(npc_buy), "Should not have been able to sell something"
+    assert_equal(0, player.gold)
+  end
+
+  test "can equip a weapon" do
+    player = Player.new
+    item_type = ItemType.new(:item_type => "sword")
+    player_item = PlayerItem.new(:player => player, :item_type => item_type)
+    player_item.save()
+
+    assert_true player.has_item_type?(item_type)
+    assert_false player.has_equipped?(item_type)
+
+    assert_true player.equip(player_item)
+
+    assert_true player.has_equipped?(item_type)
+
+    # we can equip it again
+    assert_true player.equip(player_item)
+  end
+
+  test "can unequip a weapon" do
+    player = Player.new
+    item_type = ItemType.new(:item_type => "sword")
+    player_item = PlayerItem.new(:player => player, :item_type => item_type, :equipped => true)
+    player_item.save()
+
+    assert_true player.has_item_type?(item_type)
+    assert_true player.has_equipped?(item_type)
+
+    assert_true player.unequip(player_item)
+
+    assert_false player.has_equipped?(item_type)
+
+    # we can't unequip it again
+    assert_false player.unequip(player_item)
+  end
+
 end

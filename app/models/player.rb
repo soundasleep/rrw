@@ -86,6 +86,10 @@ class Player < Character
     PlayerItem.where(:player => self, :item_type => item_type)
   end
 
+  def has_equipped?(item_type)
+    PlayerItem.where(:player => self, :item_type => item_type, :equipped => true).length > 0
+  end
+
   ###
    # Travel along the given connection
    # @return true if successful
@@ -138,6 +142,7 @@ class Player < Character
    # @see logs
   ###
   def buy(npc_sell)
+    return add_error "Could not find that sellable item" unless npc_sell
     return add_error "You do not have enough gold to purchase that" unless self.gold >= npc_sell.cost
     return add_error "That NPC does not have any of those to sell to you" unless npc_sell.current_quantity > 0
 
@@ -160,7 +165,61 @@ class Player < Character
     return true
   end
 
+  ###
+   # Sell the given item.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def sell(npc_buy)
+    return add_error "Could not find that buyable item" unless npc_buy
+
+    return add_error "Could not sell that item" unless remove_item(npc_buy.item_type)
+    self.gold += npc_buy.cost
+    add_log "You sold one #{npc_buy.item_type.name} to #{npc_buy.npc.name} for #{npc_buy.cost}g"
+    update_score()
+
+    return true
+  end
+
+  ###
+   # Equip the given item.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def equip(player_item)
+    return add_error "Could not find that item to equip" unless player_item
+    return add_error "That is not your item to equip" unless player_item.player == self
+
+    success = do_equip(player_item)
+    return add_error "You cannot equip a #{player_item.item_type.name}" unless success
+
+    return true
+  end
+
+  ###
+   # Unequip the given item.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def unequip(player_item)
+    return add_error "Could not find that item to unequip" unless player_item
+    return add_error "That is not your item to uneqip" unless player_item.player == self
+    return add_error "That item is already unequipped" unless player_item.equipped
+
+    success = do_unequip(player_item)
+    return add_error "You cannot unequip a #{player_item.item_type.name}" unless success
+
+    return true
+  end
+
   private
+
+    ###
+     # @return true if successful
+    ###
     def add_item(item_type)
       # does the current player have one of these already?
       existing_items = PlayerItem.where(:player => self, :item_type => item_type)
@@ -174,7 +233,69 @@ class Player < Character
         item.save()
       end
       update_score()
-      save()
+      return true
+    end
+
+    ###
+     # @return true if successful
+    ###
+    def remove_item(item_type)
+      # does the current player have one of these already?
+      existing_items = PlayerItem.where(:player => self, :item_type => item_type)
+      if existing_items.length >= 1
+        # update quantity
+        if existing_items.first.quantity > 1
+          existing_items.first.quantity -= 1
+          existing_items.first.save()
+        else
+          # unequip if it is equippable
+          if existing_items.first.item_type.can_equip?
+            do_unequip(existing_items.first)
+          end
+          existing_items.first.destroy()
+        end
+        update_score()
+        return true
+      else
+        return false
+      end
+    end
+
+    ###
+     # if a weapon, unequips anything that was already equipped
+     # @return true if the equip was successful
+    ###
+    def do_equip(player_item)
+      if player_item.item_type.can_equip?
+        player_item.equipped = true
+        player_item.save()
+        add_log "Equipped #{player_item.item_type.name}"
+
+        # unequip any other weapons
+        if player_item.item_type.is_weapon?
+          PlayerItem.where(:player => self).select { |pi| pi != player_item and pi.item_type.is_weapon? }.each do |pi|
+            pi.equipped = false
+            pi.save()
+            add_log "Unequipped #{pi.item_type.name}"
+          end
+        end
+
+        return true
+      else
+        return false
+      end
+    end
+
+    ###
+     # @return true if the unequip was sucessful
+    ###
+    def do_unequip(player_item)
+      if player_item.item_type.can_equip?
+        player_item.equipped = false
+        player_item.save()
+        add_log "Unequipped #{player_item.item_type.name}"
+      end
+      return true
     end
 
 end
