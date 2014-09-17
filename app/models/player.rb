@@ -10,8 +10,8 @@ class Player < Character
   def init
     self.name ||= "New player"
     self.level ||= 1
-    self.current_health ||= 0
     self.total_health ||= 0
+    self.current_health ||= self.total_health
     self.current_mana ||= 0
     self.total_mana ||= 0
     self.gold ||= 0
@@ -78,6 +78,14 @@ class Player < Character
     self.save()
   end
 
+  def has_item_type?(item_type)
+    get_items(item_type).length > 0
+  end
+
+  def get_items(item_type)
+    PlayerItem.where(:player => self, :item_type => item_type)
+  end
+
   ###
    # Travel along the given connection
    # @return true if successful
@@ -107,9 +115,11 @@ class Player < Character
    # Attack the given Npc.
    # @return true if successful
    # @see #errors
+   # @see #logs
   ###
   def attack(npc)
     return add_error "Could not find that NPC" unless npc
+    return add_error "That NPC is already dead" unless npc.current_health > 0
 
     self.do_attack(npc)
     if npc.current_health > 0
@@ -120,5 +130,51 @@ class Player < Character
 
     return true
   end
+
+  ###
+   # Buy the given item.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def buy(npc_sell)
+    return add_error "You do not have enough gold to purchase that" unless self.gold >= npc_sell.cost
+    return add_error "That NPC does not have any of those to sell to you" unless npc_sell.current_quantity > 0
+
+    npc_sell.current_quantity -= 1
+    self.gold -= npc_sell.cost
+
+    # if a bed, we use it instantly
+    if npc_sell.item_type.item_type == "bed"
+      current_health = total_health
+      update_score()
+      add_log "You slept in a bed for #{npc_sell.cost}g, restoring your health to #{current_health}/#{total_health}"
+    else
+      add_item npc_sell.item_type
+      update_score()
+      add_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.cost}g"
+    end
+
+    npc_sell.save()
+
+    return true
+  end
+
+  private
+    def add_item(item_type)
+      # does the current player have one of these already?
+      existing_items = PlayerItem.where(:player => self, :item_type => item_type)
+      if existing_items.length >= 1
+        # update quantity
+        existing_items.first.quantity += 1
+        existing_items.first.save()
+      else
+        # create a new one
+        item = PlayerItem.new(:player => self, :item_type => item_type, :quantity => 1)
+        item.save()
+      end
+      update_score()
+      save()
+    end
 
 end

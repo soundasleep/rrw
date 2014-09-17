@@ -97,62 +97,25 @@ class WorldController < ApplicationController
 
   def travel
     return unless player_is_valid?
-    if not current_player.travel(Connection.find(params[:connection]))
-      add_errors current_player.errors
-    end
+    current_player.travel(Connection.find(params[:connection]))
+    add_errors current_player.errors
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
 
   def attack
     return unless player_is_valid?
-
-    if not current_player.attack(Npc.find(params[:npc]))
-      add_errors current_player.errors
-    end
+    current_player.attack(Npc.find(params[:npc]))
+    add_errors current_player.errors
     add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
 
   def buy
     return unless player_is_valid?
-
-    if current_player and params[:npc_sells]
-      npc_sells = NpcSells.where(:id => params[:npc_sells])
-      if npc_sells.length == 1
-        npc_sell = npc_sells.first
-        if current_player.gold >= npc_sell.cost
-          if npc_sell.current_quantity > 0
-            npc_sell.current_quantity -= 1
-            current_player.gold -= npc_sell.cost
-
-            # if a bed, we use it instantly
-            if npc_sell.item_type.item_type == "bed"
-              current_player.current_health = current_player.total_health
-              current_player.update_score()
-              current_player.save()
-              add_combat_log "You slept in a bed for #{npc_sell.cost}g, restoring your health to #{current_player.current_health}/#{current_player.total_health}"
-              return redirect_to "/world/index"
-            else
-              add_item current_player, npc_sell.item_type
-              npc_sell.save()
-              current_player.update_score()
-              current_player.save()
-              add_combat_log "You bought one #{npc_sell.item_type.name} from #{npc_sell.npc.name} for #{npc_sell.cost}g"
-              return redirect_to "/world/index"
-            end
-          else
-            add_error "That NPC does not have any of those to sell to you"
-            return redirect_to "/world/index"
-          end
-        else
-          add_error "You do not have enough gold to purchase that"
-          return redirect_to "/world/index"
-        end
-      end
-    end
-
-    add_error "Could not find that sellable item"
+    current_player.buy(NpcSells.find(params[:npc_sells]))
+    add_errors current_player.errors
+    add_combat_logs current_player.logs
     redirect_to "/world/index"
   end
 
