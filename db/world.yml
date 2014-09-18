@@ -112,6 +112,7 @@ spaces:
       home: back into town
       dusty_cave: into a cave
       mountain_pass: through the mountain pass
+      cathedral: to the cathedral
 
     npcs:
       spider_1:
@@ -124,6 +125,109 @@ spaces:
         level: 2
         health: 10
         respawns: 30
+
+  cathedral:
+    name: Abandoned cathedral
+    description: "A dusty and abandoned cathedral, hiding something in its shadows"
+    connect:
+      forest: back into the forest
+
+    npcs:
+      mouse:
+        name: Mouse
+        level: 2
+        health: 5
+        respawns: 30
+
+  crypt:
+    name: Crypt
+    description: "A dark and decrepid crypt for the local cathedral"
+    connect:
+      cathedral: back to the cathedral
+      crypt_storage: to the storage room
+      crypt_2: deeper into the crypt
+
+    npcs:
+      skeleton:
+        name: Skeleton
+        level: 3
+        health: 10
+        respawns: 60
+        blocks: crypt_2
+
+  crypt_storage:
+    name: Crypt storage room
+    description: "A musty room filled with the smell of those previously deceased"
+    connect:
+      crypt: out of the storage room
+
+    npcs:
+      skeleton_1:
+        name: Skeleton 1
+        level: 3
+        health: 10
+        respawns: 60
+
+      skeleton_2:
+        name: Skeleton 2
+        level: 3
+        health: 10
+        respawns: 60
+
+      skeleton_3:
+        name: Skeleton 3
+        level: 3
+        health: 10
+        respawns: 60
+
+      skeleton_4:
+        name: Skeleton 4
+        level: 3
+        health: 10
+        respawns: 60
+
+  crypt_2:
+    name: Crypt level 2
+    description: "The crypt delves underground into a second layer"
+    connect:
+      crypt: up into the crypt
+      dark_sanctum: into the dark sanctum
+
+    npcs:
+      zombie_1:
+        name: Zombie 1
+        level: 5
+        health: 15
+        respawns: 180
+        blocks: dark_sanctum
+
+      zombie_2:
+        name: Zombie 2
+        level: 5
+        health: 15
+        respawns: 180
+        blocks: dark_sanctum
+
+      zombie_3:
+        name: Zombie 3
+        level: 5
+        health: 15
+        respawns: 180
+        blocks: dark_sanctum
+
+  dark_sanctum:
+    name: Dark sanctum
+    description: "A dark and mysterious place filled with evil magics"
+    connect:
+      crypt_2: up into the crypt
+
+    npcs:
+      witch:
+        name: Witch
+        level: 10
+        health: 60
+        respawns: 240
+        blocks: crypt_2
 
   dusty_cave:
     name: Dusty cave

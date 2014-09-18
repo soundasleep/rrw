@@ -30,6 +30,9 @@ class Npc < Character
       "lizard" => Npc_Lizard,
       "ice_dragon" => Npc_IceDragon,
       "black_dragon" => Npc_BlackDragon,
+      "skeleton" => Npc_Skeleton,
+      "zombie" => Npc_Zombie,
+      "witch" => Npc_Witch,
     }
   end
 
@@ -191,10 +194,10 @@ end
 
 class Npc_IceDragon < Npc_Abstract
   def get_damage
-    (1 + Random.rand(6)) + (1 + Random.rand(6))
+    (1 + Random.rand(7)) + (1 + Random.rand(7))
   end
   def get_damage_string
-    "2d6"
+    "2d7"
   end
 
   def get_drops
@@ -207,6 +210,80 @@ class Npc_IceDragon < Npc_Abstract
     end
     if chance(20)
       drops.push ItemType.where(:item_type => "katana").first()
+    end
+    return drops
+  end
+end
+
+class Npc_Skeleton < Npc_Abstract
+  def get_damage
+    1 + Random.rand(5)
+  end
+
+  def get_damage_string
+    "1d5"
+  end
+
+  def get_drops
+    drops = []
+    if chance(80)
+      drops.push ItemType.where(:item_type => "sword").first()
+    end
+    if chance(10)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
+    if chance(2)
+      drops.push ItemType.where(:item_type => "scroll_fireball").first()
+    end
+    return drops
+  end
+end
+
+class Npc_Zombie < Npc_Abstract
+  def get_damage
+    1 + Random.rand(8)
+  end
+
+  def get_damage_string
+    "1d8"
+  end
+
+  def get_drops
+    drops = []
+    if chance(40)
+      drops.push ItemType.where(:item_type => "health_potion").first()
+    end
+    if chance(20)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
+    if chance(10)
+      drops.push ItemType.where(:item_type => "scroll_fireball").first()
+    end
+    return drops
+  end
+end
+
+class Npc_Witch < Npc_Abstract
+  def get_damage
+    (1 + Random.rand(5)) + (1 + Random.rand(5)) + (1 + Random.rand(5))
+  end
+  def get_damage_string
+    "3d5"
+  end
+
+  def get_drops
+    drops = []
+    if chance(20)
+      drops.push ItemType.where(:item_type => "sapphire").first()
+    end
+    if chance(20)
+      drops.push ItemType.where(:item_type => "town_portal").first()
+    end
+    if chance(80)
+      drops.push ItemType.where(:item_type => "scroll_fireball").first()
+    end
+    if chance(30)
+      drops.push ItemType.where(:item_type => "scroll_lightning").first()
     end
     return drops
   end
