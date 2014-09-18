@@ -2,6 +2,17 @@ class Chat < ActiveRecord::Base
   belongs_to :player
   belongs_to :space
 
+  after_initialize :init
+
+  # Initialise model defaults
+  def init
+    self.created_at ||= Time.now
+    self.is_entering ||= false
+    self.is_leaving ||= false
+    self.is_death ||= false
+    self.is_new_player ||= false
+  end
+
   def render_text
     players = Player.where(:id => player_id)
     if players.length > 0
@@ -26,5 +37,21 @@ class Chat < ActiveRecord::Base
     c.push "is-death" if is_death
     c.push "is-new-player" if is_new_player
     c.join " "
+  end
+
+  def to_json
+    {
+      :id => id,
+      :is_entering => is_entering,
+      :is_leaving => is_leaving,
+      :is_death => is_death,
+      :is_new_player => is_new_player,
+      :text => text,
+      :player_id => player_id,
+      :created_at => created_at,
+      :render_text => render_text,
+      :render_time => render_time,
+      :classes => classes,
+    }
   end
 end

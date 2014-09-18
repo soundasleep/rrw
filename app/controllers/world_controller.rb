@@ -37,22 +37,7 @@ class WorldController < ApplicationController
     return [] unless has_current_player?
 
     chat = Chat.where(:space_id => current_player.space_id).where.not(:text => nil).order(created_at: :desc).limit(20)
-    result = []
-    chat.each do |c|
-      result.push({
-        :id => c.id,
-        :is_entering => c.is_entering,
-        :is_leaving => c.is_leaving,
-        :is_death => c.is_death,
-        :is_new_player => c.is_new_player,
-        :text => c.text,
-        :player_id => c.player_id,
-        :created_at => c.created_at,
-        :render_text => c.render_text,
-        :render_time => c.render_time,
-        :classes => c.classes,
-      })
-    end
+    result = chat.map { |c| c.to_json }
 
     return result
   end

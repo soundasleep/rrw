@@ -6,7 +6,8 @@ class ApplicationController < ActionController::Base
   # Load a player model
   helper_method :current_player, :has_current_player?
 
-  ### Based on http://guides.rubyonrails.org/action_controller_overview.html.
+  ###
+   # Based on http://guides.rubyonrails.org/action_controller_overview.html.
    #
    # To be able to store objects rather than IDs in sessions, use the
    # `active_record_store` rather than the `cookie_store`:
