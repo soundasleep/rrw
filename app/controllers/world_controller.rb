@@ -51,62 +51,43 @@ class WorldController < ApplicationController
   end
 
   def say
-    if params[:text]
-      Chat.new(:space_id => current_player.space_id, :player => current_player, :text => params[:text]).save()
-      return redirect_to("/world/index")
-    end
-
-    add_error "No valid text specified"
-    redirect_to "/world/index"
+    current_player.say(params[:text])
+    log_and_redirect "/world/index"
   end
 
   def travel
     current_player.travel(Connection.find(params[:connection]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    log_and_redirect "/world/index"
   end
 
   def attack
     current_player.attack(Npc.find(params[:npc]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    log_and_redirect "/world/index"
   end
 
   def buy
     current_player.buy(NpcSells.find(params[:npc_sells]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    log_and_redirect "/world/index"
   end
 
   def sell
     current_player.sell(NpcBuys.find(params[:npc_buys]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/world/index"
+    log_and_redirect "/world/index"
   end
 
   def use
     current_player.use(PlayerItem.find(params[:player_item]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/player/index"
+    log_and_redirect "/player/index"
   end
 
   def equip
     current_player.equip(PlayerItem.find(params[:player_item]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/player/index"
+    log_and_redirect "/player/index"
   end
 
   def unequip
     current_player.unequip(PlayerItem.find(params[:player_item]))
-    add_errors current_player.problems
-    add_combat_logs current_player.logs
-    redirect_to "/player/index"
+    log_and_redirect "/player/index"
   end
 
   # helper methods
@@ -143,6 +124,12 @@ class WorldController < ApplicationController
   end
 
   private
+
+    def log_and_redirect(destination)
+      add_errors current_player.problems
+      add_combat_logs current_player.logs
+      redirect_to destination
+    end
 
     ###
      # Check that the current player is valid;

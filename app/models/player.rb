@@ -91,6 +91,18 @@ class Player < Character
   end
 
   ###
+   # Say the given text
+   # @return true if successful
+   # @see #errors
+  ###
+  def say(text)
+    return add_problem "You are in no space" unless text
+
+    Chat.new(:space_id => space_id, :player => self, :text => text).save()
+    return true
+  end
+
+  ###
    # Travel along the given connection
    # @return true if successful
    # @see #errors
