@@ -81,4 +81,17 @@ class CreatePlayerTest < AbstractPlayerTest
     assert page.has_no_content?("1 x Dagger")
   end
 
+  test "goes to a death page on death" do
+    create_player!
+    current_player.current_health = 0
+    current_player.save()
+
+    click_button "Go to the inn"
+
+    assert page.has_content?("You just died for some reason.")
+
+    click_button "Restart game"
+    assert page.has_content?("New player")
+  end
+
 end

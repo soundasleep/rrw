@@ -4,15 +4,20 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # Load a player model
-  helper_method :current_player
+  helper_method :current_player, :has_current_player?
 
-  # Based on http://guides.rubyonrails.org/action_controller_overview.html.
-  #
-  # To be able to store objects rather than IDs in sessions, use the
-  # `active_record_store` rather than the `cookie_store`:
-  # http://stackoverflow.com/questions/9473808/cookie-overflow-in-rails-application
+  ### Based on http://guides.rubyonrails.org/action_controller_overview.html.
+   #
+   # To be able to store objects rather than IDs in sessions, use the
+   # `active_record_store` rather than the `cookie_store`:
+   # http://stackoverflow.com/questions/9473808/cookie-overflow-in-rails-application
+  ###
   def current_player
     @_current_player ||= Player.where(:user_id => current_user.id, :is_active => true).first if current_user
+  end
+
+  def has_current_player?
+    current_player != nil
   end
 
   helper_method :current_user

@@ -1,25 +1,7 @@
 class WorldController < ApplicationController
-  # Check that the current player is valid;
-  # {@code redirect_to} if the current player is not valid and
-  # needs to be created or respawned.
-  def player_is_valid?
-    # do we have a current player?
-    if not current_player
-      redirect_to "/player/new"
-      return false
-    end
-
-    # is the current player dead?
-    if current_player.current_health <= 0
-      redirect_to "/player/death"
-      return false
-    end
-    return true
-  end
+  before_action :check_player_is_valid, except: :chat
 
   def index
-    return unless player_is_valid?
-
     # respawn any NPCs that have to be respawned (just once per request)
     npcs = Npc.where(:space_id => current_player.space_id)
 
@@ -52,7 +34,7 @@ class WorldController < ApplicationController
   end
 
   def get_chat
-    return [] unless player_is_valid?
+    return [] unless has_current_player?
 
     chat = Chat.where(:space_id => current_player.space_id).where.not(:text => nil).order(created_at: :desc).limit(20)
     result = []
@@ -84,8 +66,6 @@ class WorldController < ApplicationController
   end
 
   def say
-    return [] unless player_is_valid?
-
     if params[:text]
       Chat.new(:space_id => current_player.space_id, :player => current_player, :text => params[:text]).save()
       return redirect_to("/world/index")
@@ -96,7 +76,6 @@ class WorldController < ApplicationController
   end
 
   def travel
-    return unless player_is_valid?
     current_player.travel(Connection.find(params[:connection]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -104,7 +83,6 @@ class WorldController < ApplicationController
   end
 
   def attack
-    return unless player_is_valid?
     current_player.attack(Npc.find(params[:npc]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -112,7 +90,6 @@ class WorldController < ApplicationController
   end
 
   def buy
-    return unless player_is_valid?
     current_player.buy(NpcSells.find(params[:npc_sells]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -120,7 +97,6 @@ class WorldController < ApplicationController
   end
 
   def sell
-    return unless player_is_valid?
     current_player.sell(NpcBuys.find(params[:npc_buys]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -128,7 +104,6 @@ class WorldController < ApplicationController
   end
 
   def use
-    return unless player_is_valid?
     current_player.use(PlayerItem.find(params[:player_item]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -136,7 +111,6 @@ class WorldController < ApplicationController
   end
 
   def equip
-    return unless player_is_valid?
     current_player.equip(PlayerItem.find(params[:player_item]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -144,7 +118,6 @@ class WorldController < ApplicationController
   end
 
   def unequip
-    return unless player_is_valid?
     current_player.unequip(PlayerItem.find(params[:player_item]))
     add_errors current_player.problems
     add_combat_logs current_player.logs
@@ -183,6 +156,25 @@ class WorldController < ApplicationController
   def nearby_enemies
     nearby_npcs.select { |p| not p.friendly? }
   end
+
+  private
+
+    ###
+     # Check that the current player is valid;
+     # {@code redirect_to} if the current player is not valid and
+     # needs to be created or respawned.
+    ###
+    def check_player_is_valid
+      # do we have a current player?
+      if not has_current_player?
+        return redirect_to "/player/new"
+      end
+
+      # is the current player dead?
+      if current_player.current_health <= 0
+        return redirect_to "/player/death"
+      end
+    end
 
 end
 
