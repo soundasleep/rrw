@@ -58,7 +58,7 @@ class Character < ActiveRecord::Base
     return 3 * level
   end
 
-  def do_attack(npc)
+  def do_attack(loggable, npc)
     p1 = self
     p2 = npc
 
@@ -66,11 +66,11 @@ class Character < ActiveRecord::Base
     damage_string = p1.get_damage_string
     p2.current_health -= damage
     p2.save()
-    add_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
+    loggable.add_log "#{p1.name} attacked #{p2.name} with #{damage_string} causing #{damage} damage"
     if p2.current_health <= 0
       p2.died_at = Time.now
       p2.save()
-      add_log "#{p2.name} has died"
+      loggable.add_log "#{p2.name} has died"
 
       # track who killed this player
       if p2.track_killed_by?
@@ -88,7 +88,7 @@ class Character < ActiveRecord::Base
       # do post-combat mechanics: XP, loot
       if p1.can_xp?
         xp = p2.get_xp
-        add_log "#{p1.name} gained #{xp} XP"
+        loggable.add_log "#{p1.name} gained #{xp} XP"
         if p1.xp == nil
           p1.xp = 0
         end
@@ -98,18 +98,18 @@ class Character < ActiveRecord::Base
         # upgrade levels?
         if p1.xp >= p1.next_level_xp
           p1.level += 1
-          add_log "#{p1.name} has achieved level #{p1.level}!"
+          loggable.add_log "#{p1.name} has achieved level #{p1.level}!"
           p1.current_health += 2
           p1.total_health += 2
-          add_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
+          loggable.add_log "#{p1.name} now has #{p1.current_health}/#{p1.total_health} health"
           p1.save()
         else
-          # add_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
+          # loggable.add_log "#{p1.name} has #{p1.xp} XP, needs #{p1.next_level_xp} for the next level"
         end
 
         # remove one-use weapons?
         if p1.current_weapon and p1.current_weapon.item_type.is_one_attack?
-          add_log "#{p1.current_weapon.item_type.name} has been used"
+          loggable.add_log "#{p1.current_weapon.item_type.name} has been used"
           remove_item(p1, p1.current_weapon.item_type)
 
           if not p1.current_weapon
@@ -123,7 +123,7 @@ class Character < ActiveRecord::Base
 
       if p1.can_loot?
         loot = p2.get_loot
-        add_log "#{p1.name} receives #{loot[:gold]} gold"
+        loggable.add_log "#{p1.name} receives #{loot[:gold]} gold"
         # TODO other loot types
         # maybe create a new Loot class?
         p1.gold += loot[:gold]
@@ -131,7 +131,7 @@ class Character < ActiveRecord::Base
 
         # any other items?
         loot[:items].each do |item_type|
-          add_log "#{p1.name} also receives one #{item_type.name}"
+          loggable.add_log "#{p1.name} also receives one #{item_type.name}"
           add_item p1, item_type
         end
       end

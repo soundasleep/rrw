@@ -125,10 +125,10 @@ class Player < Character
     return add_problem "Could not find that NPC" unless npc
     return add_problem "That NPC is already dead" unless npc.current_health > 0
 
-    self.do_attack(npc)
+    self.do_attack(self, npc)
     if npc.current_health > 0
       npc.attacking = self
-      npc.do_attack(self)
+      npc.do_attack(self, self)
       npc.save()
     end
 
