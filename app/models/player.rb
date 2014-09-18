@@ -254,6 +254,25 @@ class Player < Character
     return true
   end
 
+  ###
+   # Transport to the given Space.
+   # @return true if successful
+   # @see errors
+   # @see logs
+  ###
+  def transport_to(home_space)
+    return add_problem "Could not find a home to transport to" unless home_space
+
+    # add 'entered' and 'left' chats
+    Chat.new(:space => space, :player => self, :text => "transported out of " + space.name, :is_leaving => true).save()
+    Chat.new(:space => home_space, :player => self, :text => "transported to " + home_space.name, :is_entering => true).save()
+
+    self.space = home_space
+    save()
+
+    return true
+  end
+
   private
 
     ###

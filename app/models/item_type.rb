@@ -176,15 +176,7 @@ class ItemType_TownPortal < ItemType_Abstract
   end
 
   def use(current_player, item_type)
-    home_space = Space.where(:name => "Home")
-    if home_space.length > 0
-      # add 'entered' and 'left' chats
-      Chat.new(:space => current_player.space, :player => current_player, :text => "transported out of " + current_player.space.name, :is_leaving => true).save()
-      Chat.new(:space => home_space.first, :player => current_player, :text => "transported to " + home_space.first.name, :is_entering => true).save()
-
-      current_player.space_id = home_space.first.id
-      current_player.add_log "Used #{item_type.name}"
-      current_player.save()
-    end
+    current_player.add_log "Used #{item_type.name}"
+    current_player.transport_to(Space.where(:name => "Home").first)
   end
 end
