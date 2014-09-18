@@ -52,7 +52,7 @@
     - current_player.space.connections.each do |c|
       = form_tag("/world/travel", method: "post") do
         = hidden_field_tag(:connection, c.id)
-        = button_tag(:disabled => (c.requires_death and c.requires_death.current_health > 0)) do
+        = button_tag(:disabled => c.is_blocked?) do
           Go #{c.name}
 
     = form_tag("/world/index", method: "get") do

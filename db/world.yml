@@ -131,6 +131,7 @@ spaces:
     description: "A dusty and abandoned cathedral, hiding something in its shadows"
     connect:
       forest: back into the forest
+      crypt: into the crypt
 
     npcs:
       mouse:

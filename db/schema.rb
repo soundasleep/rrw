@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140826033410) do
+ActiveRecord::Schema.define(version: 20140918044036) do
+
+  create_table "blockers", force: true do |t|
+    t.integer  "connection_id"
+    t.integer  "npc_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "blockers", ["connection_id"], name: "index_blockers_on_connection_id"
+  add_index "blockers", ["npc_id"], name: "index_blockers_on_npc_id"
 
   create_table "chats", force: true do |t|
     t.integer  "player_id"
@@ -38,11 +48,9 @@ ActiveRecord::Schema.define(version: 20140826033410) do
     t.integer  "to_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "requires_death_id"
   end
 
   add_index "connections", ["from_id"], name: "index_connections_on_from_id"
-  add_index "connections", ["requires_death_id"], name: "index_connections_on_requires_death_id"
   add_index "connections", ["to_id"], name: "index_connections_on_to_id"
 
   create_table "item_types", force: true do |t|

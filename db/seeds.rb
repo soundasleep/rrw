@@ -95,8 +95,8 @@ file["spaces"].each do |space_id, space|
     # blockers
     (space['npcs'] or {}).each do |npc_id, npc|
       if npc['blocks']
-        to.requires_death_id = cache[:npcs][space_id][npc_id].id
-        to.save()
+        blocker = Blocker.create(:npc => cache[:npcs][space_id][npc_id], :connection => to)
+        blocker.save()
       end
     end
   end

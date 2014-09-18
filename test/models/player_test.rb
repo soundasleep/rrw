@@ -18,7 +18,9 @@ class PlayerTest < ActiveSupport::TestCase
     s1 = Space.new(name: "Space 1")
     s2 = Space.new(name: "Space 2")
     npc = Npc.new
-    c = Connection.new(from: s1, to: s2, requires_death: npc)
+    c = Connection.new(from: s1, to: s2)
+    b = Blocker.new(npc: npc, connection: c)
+    b.save()
     player.space = s1
 
     assert_false player.travel(c), "Should not have been able to travel"

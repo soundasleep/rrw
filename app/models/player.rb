@@ -113,8 +113,8 @@ class Player < Character
     return add_problem "You are not in that space" unless connection.from == space
 
     # check that if there's a require_death, that this npc is dead
-    if connection.requires_death and connection.requires_death.current_health > 0
-      return add_problem "You cannot travel there without first killing #{connection.requires_death.name}"
+    if connection.is_blocked?
+      return add_problem "You cannot travel there without first killing #{connection.blocked_by}"
     end
 
     self.space = connection.to
